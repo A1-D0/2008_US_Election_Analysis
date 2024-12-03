@@ -28,7 +28,6 @@ What is the most influential factor in predicting the presidential election resu
 # Expected Findings
 Note the target population.
 
-
 # Methodology
 The dataset of reference contains information from all 50 states and the District of Columbia for the 2008 U.S. presidential election. This analysis consists of 5 models, 4 of which investigate if Income (the Per capita income in the state as of 2007 (in dollars)), HS (percentage of adults with at least a high school education), BA (percentage of adults with at least a high school education), and Dem.Rep (the difference in the percentage of Democrats and the percentage of Republicans) is associated with the odds that Obama (Democrat) wins state in 2008 (ObamaWin = 1), and 1 of which is an interaction model that investigates the joint effect of these four variables.
 
@@ -42,8 +41,33 @@ The dataset includes 51 observations (50 states + DC) with variables related to 
 summary(Election08)
 
 # Visualize relationships
-ggplot(Election08, aes(x = Income, y = Dem.Rep, color = factor(ObamaWin))) +
-  geom_point() + labs(color = "Obama Win")
+# Boxplot: Income vs ObamaWin
+ggplot(Election08, aes(x = Income, y = factor(ObamaWin), fill = factor(ObamaWin))) +
+  geom_boxplot() +
+  labs(title = "Income vs ObamaWin", x = "Income", y = "Obama Win (1=Yes, 0=No)") +
+  scale_fill_manual(values = c("red", "blue")) +
+  theme_minimal()
+
+# Boxplot: HS vs ObamaWin
+ggplot(Election08, aes(x = HS, y = factor(ObamaWin), fill = factor(ObamaWin))) +
+  geom_boxplot() +
+  labs(title = "High School Education (%) vs ObamaWin", x = "HS (%)", y = "Obama Win (1=Yes, 0=No)") +
+  scale_fill_manual(values = c("red", "blue")) +
+  theme_minimal()
+
+# Boxplot: BA vs ObamaWin
+ggplot(Election08, aes(x = BA, y = factor(ObamaWin), fill = factor(ObamaWin))) +
+  geom_boxplot() +
+  labs(title = "Bachelor's Degree (%) vs ObamaWin", x = "BA (%)", y = "Obama Win (1=Yes, 0=No)") +
+  scale_fill_manual(values = c("red", "blue")) +
+  theme_minimal()
+
+# Boxplot: Dem.Rep vs ObamaWin
+ggplot(Election08, aes(x = Dem.Rep, y = factor(ObamaWin), fill = factor(ObamaWin))) +
+  geom_boxplot() +
+  labs(title = "Democrat-Republican Difference vs ObamaWin", x = "Dem.Rep (%)", y = "Obama Win (1=Yes, 0=No)") +
+  scale_fill_manual(values = c("red", "blue")) +
+  theme_minimal()
 
 # Check Conditions
 The conditions for logistic regressions are linearity, randomness, and independence. 
