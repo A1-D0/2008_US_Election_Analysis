@@ -14,6 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(Stat2Data)
 library(ggplot2)
+library(dplyr)
 data("Election08")
 ```
 ## Abstract
@@ -97,6 +98,42 @@ ggplot(Election08, aes(x = Dem.Rep, y = logit)) +
   geom_point() +
   geom_smooth(method = "loess", se = FALSE, color = "blue") +
   labs(title = "Linearity Check: Dem.Rep vs Logit", x = "Dem.Rep", y = "Logit")
+
+# Function to compute empirical logit and create the plot
+empirical_logit_tidy <- function(data, predictor, response) {
+  # Create bins for the predictor and calculate empirical logits
+  emp_log <- data %>%
+    mutate(BinnedPredictor = cut(!!sym(predictor), breaks = 10)) %>% # Bin the predictor
+    group_by(BinnedPredictor) %>%
+    summarize(
+      MeanPredictor = mean(!!sym(predictor), na.rm = TRUE), # Mean of the predictor in each bin
+      SuccessCount = sum(!!sym(response)), # Count of successes
+      TotalCount = n(), # Total count in each bin
+      ProportionSuccess = SuccessCount / TotalCount # Proportion of successes
+    ) %>%
+    mutate(
+      OddsSuccess = ProportionSuccess / (1 - ProportionSuccess), # Odds of success
+      EmpiricalLogit = log(OddsSuccess) # Logit (log-odds)
+    ) %>%
+    filter(!is.infinite(EmpiricalLogit)) # Remove bins with infinite logits
+  
+  # Plot empirical logit vs predictor
+  ggplot(emp_log, aes(x = MeanPredictor, y = EmpiricalLogit)) +
+    geom_point() +
+    geom_smooth(method = "loess", se = FALSE, color = "blue") +
+    labs(title = paste("Empirical Logit Plot for", predictor),
+         x = predictor,
+         y = "Empirical Logit") +
+    theme_minimal()
+}
+
+# Generate empirical logit plots for each predictor
+empirical_logit_tidy(Election08, "Income", "ObamaWin")
+empirical_logit_tidy(Election08, "HS", "ObamaWin")
+empirical_logit_tidy(Election08, "BA", "ObamaWin")
+empirical_logit_tidy(Election08, "Dem.Rep", "ObamaWin")
+
+Since there exists a linear relationship between the log(odds) and the predictor(s), the linearity condition is satisfied.
 
 # Correlation matrix
 cor_matrix <- cor(Election08[, c("Income", "HS", "BA", "Dem.Rep")])
