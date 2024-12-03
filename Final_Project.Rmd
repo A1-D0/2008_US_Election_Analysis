@@ -29,7 +29,8 @@ This project examines state-level factors predicting whether Barack Obama or Joh
 The goal is to use logistic regression to determine which state-level socioeconomic and political factors best predict election results. This analysis helps understand the relationships among predictors like income, education levels, and political leanings.
 
 # Research Question
-What is the most influential factor in predicting the presidential election result in 2008?
+Among political leaning, education level, and income, what is the most influential factor in predicting the presidential election result in 2008?
+Is the multiple regression model more effective in predicting the election result than the single regressions?
 
 # Expected Findings
 Note the target population.
