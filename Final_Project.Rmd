@@ -30,7 +30,7 @@ The goal is to use logistic regression to determine which state-level socioecono
 
 # Research Question
 Among political leaning, education level, and income, what is the most influential factor in predicting the presidential election result in 2008?
-Is the multiple regression model more effective in predicting the election result than the single regressions?
+Is the multiple regression model more effective in predicting the election result than the single regressions models?
 
 # Expected Findings
 Note the target population.
