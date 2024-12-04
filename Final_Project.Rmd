@@ -169,7 +169,7 @@ empirical_logit_tidy(Election08, "Dem.Rep", "ObamaWin")
 
 ```
 
-The linearity condition is satisfied since there exists a linear relationship between the log(odds) and the predictor(s).
+Thus, the linearity condition is satisfied since there exists a linear relationship between the log(odds) and the predictor(s).
 
 ```{r}
 # Correlation matrix
