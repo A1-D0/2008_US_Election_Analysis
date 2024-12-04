@@ -28,9 +28,9 @@ This project examines state-level factors predicting whether Barack Obama or Joh
 ## Introduction
 The goal is to use logistic regression to determine which state-level socioeconomic and political factors best predict election results. This analysis helps understand the relationships among predictors like income, education levels, and political leanings.
 
-# Research Question
+## Research Question
 Among political leaning, education level, and income, what is the most influential factor in predicting the presidential election result in 2008?
-Is the multiple regression model more effective in predicting the election result than the single regressions models?
+Is the multiple regression model more effective in predicting the election result than the single regression models?
 
 # Expected Findings
 Note the target population.
@@ -38,19 +38,27 @@ Note the target population.
 # Methodology
 The dataset of reference contains information from all 50 states and the District of Columbia for the 2008 U.S. presidential election. This analysis consists of 5 models, 4 of which investigate if Income (the Per capita income in the state as of 2007 (in dollars)), HS (percentage of adults with at least a high school education), BA (percentage of adults with at least a high school education), and Dem.Rep (the difference in the percentage of Democrats and the percentage of Republicans) is associated with the odds that Obama (Democrat) wins state in 2008 (ObamaWin = 1), and 1 of which is an interaction model that investigates the joint effect of these four variables.
 
-# Dataset Information
+## Dataset Overview
 ```{r}
 data(Election08)
 str(Election08)
 summary(Election08)
 
+# Description of the dataset
+It is important to understand the factors that influenced voting behavior across different states in analyzing the 2008 U.S. presidential election results. We are interested in exploring how demographic variables and educational attainment correlate with the likelihood of Barack Obama's winning in various states.
+
+# Definition of variables
+The dataset includes 51 observations (50 states + DC) with variables related to income, education, and political alignment. The dependent variable is `ObamaWin`, a binary outcome (1 = Obama won the state, 0 = McCain won the state).
+Independent variables are:
+1. Income: Per capita income in the state as of 2007 (in US dollars).
+2. HS: Percentage of adults with at least a high school education.
+3. BA: Percentage of adults with at least a college education.
+4. Dem.Rep: Difference in percent Democrat and percent Republican (according to 2008 Gallup survey).
+
 ```
-
-The dataset includes 51 observations (50 states + DC) with variables related to income, education, and political alignment. The dependent variable is `ObamaWin`, a binary outcome (1 = Obama won, 0 = McCain won).
-
-
-# Process
+## Data Preparation
 ```{r}
+# Data cleaning and summary
 summary(Election08)
 
 # Visualize relationships
@@ -83,10 +91,10 @@ ggplot(Election08, aes(x = Dem.Rep, y = factor(ObamaWin), fill = factor(ObamaWin
   theme_minimal()
 
 ```
-
+## Statistical Analysis
 
 # Check Conditions
-The conditions for logistic regressions are linearity, randomness, and independence. 
+The conditions for logistic regressions are linearity, randomness, and independence.
 Linearity: this means that there should exist a linear relationship between log(odds) and the predictor.
 The process of data collection is assumed to be random, and each observation is assumed to be independent.
 
@@ -161,7 +169,7 @@ empirical_logit_tidy(Election08, "Dem.Rep", "ObamaWin")
 
 ```
 
-Since there exists a linear relationship between the log(odds) and the predictor(s), the linearity condition is satisfied.
+The linearity condition is satisfied since there exists a linear relationship between the log(odds) and the predictor(s).
 
 ```{r}
 # Correlation matrix
@@ -173,7 +181,7 @@ vif(lm(Dem.Rep ~ Income + HS + BA, data = Election08))
 
 ```
 
-
+# Logistic regression models
 ```{r}
 # Logistic regression for each predictor
 models <- list(
@@ -226,13 +234,11 @@ compare_metrics <- function(model, data, response) {
   list(SSE = sse, SSM = ssm, SSR = ssr, R_squared = r_squared, Adjusted_R_squared = adj_r_squared)
 }
 
-# Compute metrics for all models
-model_metrics <- lapply(models, function(m) compare_metrics(m, Election08, "ObamaWin"))
-model_metrics[["Final Model"]] <- compare_metrics(final_model, Election08, "ObamaWin")
-model_metrics
+## Results
 
-```
+# Interpretation
 
+## Suggestion for future research
 
-# Conclusion
+## Conclusion
 
