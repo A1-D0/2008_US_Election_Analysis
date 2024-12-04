@@ -90,6 +90,8 @@ The conditions for logistic regressions are linearity, randomness, and independe
 Linearity: this means that there should exist a linear relationship between log(odds) and the predictor.
 The process of data collection is assumed to be random, and each observation is assumed to be independent.
 
+```{r}
+
 logistic_model <- glm(ObamaWin ~ Income + HS + BA + Dem.Rep, data = Election08, family = "binomial")
 
 Election08$logit <- predict(logistic_model, type = "link")  # Logit values
@@ -131,22 +133,33 @@ empirical_logit_tidy <- function(data, predictor, response) {
       EmpiricalLogit = log(OddsSuccess) # Logit (log-odds)
     ) %>%
     filter(!is.infinite(EmpiricalLogit)) # Remove bins with infinite logits
-  
-  # Plot empirical logit vs predictor
-  ggplot(emp_log, aes(x = MeanPredictor, y = EmpiricalLogit)) +
-    geom_point() +
-    geom_smooth(method = "loess", se = FALSE, color = "blue") +
-    labs(title = paste("Empirical Logit Plot for", predictor),
-         x = predictor,
-         y = "Empirical Logit") +
-    theme_minimal()
+}
+```
+
+
+```{r}
+# Plot empirical logit vs predictor
+ggplot(emp_log, aes(x = MeanPredictor, y = EmpiricalLogit)) +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE, color = "blue") +
+  labs(title = paste("Empirical Logit Plot for", predictor),
+       x = predictor,
+       y = "Empirical Logit") +
+  theme_minimal()
 }
 
+```
+
+
+
+```{r}
 # Generate empirical logit plots for each predictor
 empirical_logit_tidy(Election08, "Income", "ObamaWin")
 empirical_logit_tidy(Election08, "HS", "ObamaWin")
 empirical_logit_tidy(Election08, "BA", "ObamaWin")
 empirical_logit_tidy(Election08, "Dem.Rep", "ObamaWin")
+
+```
 
 Since there exists a linear relationship between the log(odds) and the predictor(s), the linearity condition is satisfied.
 
