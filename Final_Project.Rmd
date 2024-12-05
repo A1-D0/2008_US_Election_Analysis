@@ -44,11 +44,11 @@ Understanding the demographic and socioeconomic factors that influence voting be
 The research population consists of all 50 U.S. states and the District of Columbia, as represented in the **Election08** dataset. This includes data on state-level socioeconomic characteristics (per capita income, high school, and college education levels) and political leaning (difference in Democrat and Republican support). The population is analyzed to predict whether Barack Obama or John McCain won each state in the 2008 U.S. presidential election.
 
 # Methodology
-The dataset of reference contains information from all 50 states and the District of Columbia for the 2008 U.S. presidential election. This analysis consists of 5 models, 4 of which investigate if **Income**, **HS**, **BA**, and **Dem.Rep** are associated with the odds that Obama (Democrat) wins the state in 2008 (**ObamaWin** = 1), and 1 of which is an interaction model that investigates the joint effect of these four variables.
+This study provides a structured approach to understanding how state-level characteristics influenced the 2008 presidential election and offers insights into broader patterns of electoral behavior in the United States. The dataset of reference contains information from all 50 states and the District of Columbia for the 2008 U.S. presidential election. This analysis consists of 5 models, 4 of which investigate if Income, HS, BA, and Dem.Rep is associated with the odds that Obama (Democrat) wins the state in 2008 (**ObamaWin** = 1), and 1 of which is an interaction model that investigates the joint effect of these four variables.
 
 # Rationale:
 
-The primary goal of this project is to predict state-level election outcomes for the 2008 U.S. presidential election. The dependent variable, `ObamaWin`, is categorical (1 = Obama won, 0 = McCain won), making logistic regression the most appropriate modeling technique. Logistic regression is specifically designed to model binary outcomes by estimating the probability of a success (in this case, Obama winning a state) as a function of predictor variables.
+The primary goal of this project is to predict state-level election outcomes for the 2008 U.S. presidential election. The dependent variable, `ObamaWin`, is categorical (1 = Obama won, 0 = McCain won), making logistic regression the most appropriate modeling technique. Logistic regression is specifically designed to model binary outcomes by estimating the probability of success (in this case, Obama winning a state) as a function of predictor variables.
 
 The following modeling process is used to achieve this objective:
 1. Simple Logistic Regression:
@@ -96,8 +96,6 @@ The **Election08** dataset provides state-by-state information related to the 20
 # Data Collection Procedure
 The dataset was compiled by merging information from the sources listed above, ensuring consistency in definitions and measurements across variables. Each variable was carefully checked to match its description in the dataset's metadata, and all data represent the state-level characteristics leading up to the 2008 election. This comprehensive and systematic approach ensures the dataset is suitable for logistic regression analysis, allowing for robust predictions of the 2008 U.S. presidential election results.
 
-This study provides a structured approach to understanding how state-level characteristics influenced the 2008 presidential election and offers insights into broader patterns of electoral behavior in the United States.
-
 # Data Summary
 ```{r}
 summary(Election08)
@@ -121,7 +119,7 @@ create_boxplot(Election08, "Dem.Rep", "ObamaWin", "Democrat-Republican Differenc
 # Statistical Analysis
 
 # Check Conditions
-The conditions for logistic regressions are linearity, randomness, and independence. The linearity condition means that a linear relationship between the log(odds) and the predictor should exist. Also, we assume that the process of data collection is random and each observation is independent.
+The conditions for logistic regressions are linearity, randomness, and independence. The linearity condition means that a linear relationship between the log(odds) and the predictor should exist. Also, we assume that the process of data collection is random and that each observation is independent.
 
 ```{r}
 empirical_logit_plot_refined <- function(data, predictor, response) {
@@ -134,10 +132,9 @@ empirical_logit_plot_refined <- function(data, predictor, response) {
       MeanPredictor = mean(!!sym(predictor), na.rm = TRUE),
       SuccessCount = sum(!!sym(response), na.rm = TRUE),
       TotalCount = n(),
-      .groups = "drop"
-    ) %>%
+      .groups = "We also%>%
     mutate(
-      ProportionSuccess = SuccessCount / TotalCount,
+      Propodata collection processt / TotalCount,
       OddsSuccess = ifelse(
         ProportionSuccess > 0 & ProportionSuccess < 1, 
         ProportionSuccess / (1 - ProportionSuccess), 
