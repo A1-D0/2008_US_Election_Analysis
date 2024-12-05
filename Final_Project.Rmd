@@ -98,6 +98,11 @@ The dataset was compiled by merging information from the sources listed above, e
 
 This study provides a structured approach to understanding how state-level characteristics influenced the 2008 presidential election and offers insights into broader patterns of electoral behavior in the United States.
 
+# Data Summary
+```{r}
+summary(Election08)
+```
+
 # Visualization of Relationships Between Variables
 ```{r}
 create_boxplot <- function(data, predictor, response, title, x_label) {
@@ -111,33 +116,25 @@ create_boxplot(Election08, "Income", "ObamaWin", "Income vs ObamaWin", "Income")
 create_boxplot(Election08, "HS", "ObamaWin", "High School Education (%) vs ObamaWin", "HS (%)")
 create_boxplot(Election08, "BA", "ObamaWin", "Bachelor's Degree (%) vs ObamaWin", "BA (%)")
 create_boxplot(Election08, "Dem.Rep", "ObamaWin", "Democrat-Republican Difference vs ObamaWin", "Dem.Rep (%)")
-
-```
-
-# Data Preparation
-```{r}
-summary(Election08)
 ```
 
 # Statistical Analysis
 
-## Check Conditions
+# Check Conditions
 The conditions for logistic regressions are linearity, randomness, and independence.
-Linearity: this means that there should exist a linear relationship between log(odds) and the predictor.
+Linearity: This means that a linear relationship between the log(odds) and the predictor should exist.
 The process of data collection is assumed to be random, and each observation is assumed to be independent.
+
 ```{r}
 empirical_logit_plot_simple <- function(data, predictor, response) {
-  # Bin the predictor variable
   data$BinnedPredictor <- cut(data[[predictor]], breaks = 10)
 
   summary_data <- aggregate(data[[response]], by = list(Bin = data$BinnedPredictor), FUN = sum)
   summary_data$Total <- aggregate(data[[response]], by = list(Bin = data$BinnedPredictor), FUN = length)$x
   summary_data$MeanPredictor <- aggregate(data[[predictor]], by = list(Bin = data$BinnedPredictor), FUN = mean)$x
   summary_data$ProportionSuccess <- summary_data$x / summary_data$Total
-  
   summary_data$OddsSuccess <- summary_data$ProportionSuccess / (1 - summary_data$ProportionSuccess)
   summary_data$EmpiricalLogit <- log(summary_data$OddsSuccess)
-
   summary_data <- summary_data[is.finite(summary_data$EmpiricalLogit), ]
 
   ggplot(summary_data, aes(x = MeanPredictor, y = EmpiricalLogit)) +
@@ -156,20 +153,22 @@ empirical_logit_plot_simple(Election08, "HS", "ObamaWin")
 empirical_logit_plot_simple(Election08, "BA", "ObamaWin")
 empirical_logit_plot_simple(Election08, "Dem.Rep", "ObamaWin")
 ```
-Thus, the linearity condition is satisfied since there exists a linear relationship between the log(odds) and the predictor(s).
+
+Thus, the linearity condition is satisfied since a linear relationship exists between the log(odds) and the predictor(s).
+
 ```{r}
 # Correlation matrix
 cor_matrix <- cor(Election08[, c("Income", "HS", "BA", "Dem.Rep")])
 print(cor_matrix)
 ```
+
 ```{r}
 # Variance Inflation Factor (VIF)
 vif(lm(Dem.Rep ~ Income + HS + BA, data = Election08))
 ```
 
-Simple Logistic Regression Model Construction
+# Simple Logistic Regression Model Construction
 ```{r}
-# Logistic regression for each predictor
 models <- list(
   Income = glm(ObamaWin ~ Income, data = Election08, family = "binomial"),
   HS = glm(ObamaWin ~ HS, data = Election08, family = "binomial"),
@@ -177,20 +176,22 @@ models <- list(
   DemRep = glm(ObamaWin ~ Dem.Rep, data = Election08, family = "binomial")
 )
 ```
-
+# Summary of the Simple Logistic Regression Models
 ```{r}
-# Summarize models
 lapply(models, summary)
 ```
 
-Multiple Logistic Regression Model Construction
+# Multiple Logistic Regression Model Construction
 ```{r}
 final_model <- glm(ObamaWin ~ Income + HS + BA + Dem.Rep, data = Election08, family = "binomial")
+```
+
+# Summary of the Multiple Logistic Regression Models
+```{r}
 summary(final_model)
 ```
 
 # Model Comparison by G-tests
-
 ```{r}
 ## G-test for Income
 G <- 69.737 - 48.867
@@ -223,11 +224,24 @@ p_value_g_test <- pchisq(G, df, lower.tail = FALSE)
 print(p_value_g_test)
 ```
 
+# Results & Interpretation
 
-# Results
+# Suggestions for Future Research
+1. Inclusion of Additional Variables: Future studies could incorporate other influential factors such as voter turnout rates, urban versus rural demographics, or historical voting patterns to gain a more comprehensive understanding of election outcomes.
+2. Temporal Expansion: Analyzing data from other presidential elections could help validate whether `Dem.Rep` remains the most influential predictor across different election years.
+3. Regional Analysis: Conducting regional studies (e.g., Midwest vs. South) could provide insights into whether the influence of political leaning varies geographically.
+4. Interaction Effects: Future research could explore interactions between predictors, such as how income levels might moderate the effect of education on election outcomes.
 
-## Interpretation
+# Limitations
+1. Restricted Dataset: The analysis is based on a single election year (2008), limiting the generalizability of findings to other elections.
+2. Simplistic Model Assumptions: The logistic regression models assume linear relationships between predictors and the log odds of winning, which may oversimplify complex voter behaviors.
+3. Data Availability: Some variables, like detailed demographic breakdowns, were unavailable and could provide a richer analysis.
+4. Binary Outcome: The analysis simplifies the election outcome to a binary variable, ignoring nuances such as the margin of victory.
 
-# Suggestions for future research
+# Implications
+1. Political Strategy: The strong influence of `Dem.Rep` highlights the importance of targeted campaigning in states with close Democrat-Republican margins. Understanding political leanings at the state level can guide resource allocation and strategy.
+2. Policy Prioritization: Socioeconomic factors like income and education, while secondary, still contribute to election outcomes. Policymakers may consider how addressing these issues aligns with voter preferences.
+3. Model Application: The multiple logistic regression model's effectiveness suggests its utility for other binary prediction tasks, such as forecasting election results or voter turnout based on demographic factors.
 
 # Conclusion
+This study identifies `Dem.Rep`, the difference between the percentage of Democrats and Republicans in a state, as the most influential factor in predicting the 2008 U.S. presidential election outcome. While socioeconomic variables such as income and education levels play a role, their effects are secondary to political leaning. Moreover, the multiple logistic regression model proves to be the most effective for predicting election outcomes, as it accounts for the combined influence of all predictors. These findings underscore the importance of political alignment and multivariable approaches in understanding electoral behavior, providing valuable insights for future analyses and campaign strategies.
