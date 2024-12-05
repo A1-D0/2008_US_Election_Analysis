@@ -10,18 +10,20 @@ output: pdf_document
 date: "2024-12-05"
 ---
 
-```{r setup, include=FALSE}
+```{r setup, echo=FALSE}
 # consider removing code from knit file
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 
 ```
 
-```{r}
+```{r, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 library(Stat2Data)
 library(ggplot2)
 library(dplyr)
+library(car)
 data("Election08")
 ```
+
 ## Abstract
 This study examines state-level factors predicting whether Barack Obama or John McCain won the 2008 U.S. presidential election. By leveraging both simple and multiple linear regression models, we aim to determine the most effective linear model to adopt for our final logistic regression model. In our context, we implement logistic regression models to analyze and compare predictors, identifying the most significant contributors to election outcomes. As a result, we reveal which predictors are most influential for predicting who won the 2008 U.S. election.
 
@@ -156,14 +158,13 @@ empirical_logit_tidy <- function(data, predictor, response) {
 
 ## EDIT THIS FUNCTION BELOW BASED ON THE empirical_logit_tidy FUNCTION ABOVE
 
-ggplot(emp_log, aes(x = MeanPredictor, y = EmpiricalLogit)) +
-  geom_point() +
-  geom_smooth(method = "loess", se = FALSE, color = "blue") +
-  labs(title = paste("Empirical Logit Plot for", predictor),
-       x = predictor,
-       y = "Empirical Logit") +
-  theme_minimal()
-}
+# ggplot(emp_log, aes(x = MeanPredictor, y = EmpiricalLogit)) +
+#   geom_point() +
+#   geom_smooth(method = "loess", se = FALSE, color = "blue") +
+#   labs(title = paste("Empirical Logit Plot for", predictor),
+#        x = predictor,
+#        y = "Empirical Logit") +
+#   theme_minimal()
 
 ```
 
