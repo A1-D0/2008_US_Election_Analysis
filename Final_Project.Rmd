@@ -122,43 +122,27 @@ create_boxplot(Election08, "Dem.Rep", "ObamaWin", "Democrat-Republican Differenc
 The conditions for logistic regressions are linearity, randomness, and independence. The linearity condition means that a linear relationship between the log(odds) and the predictor should exist. Also, we assume that the process of data collection is random and that each observation is independent.
 
 ```{r}
-empirical_logit_plot_refined <- function(data, predictor, response) {
-  # Bin the predictor variable into equal-width bins
-  data$BinnedPredictor <- cut(data[[predictor]], breaks = 10, include.lowest = TRUE)
+Election08$logit <- predict(logistic_model, type = "link")
 
-  summary_data <- data %>%
-    group_by(BinnedPredictor) %>%
-    summarise(
-      MeanPredictor = mean(!!sym(predictor), na.rm = TRUE),
-      SuccessCount = sum(!!sym(response), na.rm = TRUE),
-      TotalCount = n(),
-      .groups = "We also%>%
-    mutate(
-      Propodata collection processt / TotalCount,
-      OddsSuccess = ifelse(
-        ProportionSuccess > 0 & ProportionSuccess < 1, 
-        ProportionSuccess / (1 - ProportionSuccess), 
-        NA
-      ),
-      EmpiricalLogit = log(OddsSuccess)
-    ) %>%
-    filter(!is.na(EmpiricalLogit)) # Remove rows with NA logit values
+ggplot(Election08, aes(x = Income, y = logit)) +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE, color = "blue") +
+  labs(title = "Linearity Check: Income vs Logit", x = "Income", y = "Logit")
 
-  ggplot(summary_data, aes(x = MeanPredictor, y = EmpiricalLogit)) +
-    geom_point() +
-    geom_smooth(method = "loess", se = FALSE, color = "blue") +
-    labs(
-      title = paste("Empirical Logit Plot for", predictor),
-      x = predictor,
-      y = "Empirical Logit"
-    ) +
-    theme_minimal()
-}
+ggplot(Election08, aes(x = HS, y = logit)) +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE, color = "blue") +
+  labs(title = "Linearity Check: HS vs Logit", x = "HS", y = "Logit")
 
-empirical_logit_plot_refined(Election08, "Income", "ObamaWin")
-empirical_logit_plot_refined(Election08, "HS", "ObamaWin")
-empirical_logit_plot_refined(Election08, "BA", "ObamaWin")
-empirical_logit_plot_refined(Election08, "Dem.Rep", "ObamaWin")
+ggplot(Election08, aes(x = BA, y = logit)) +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE, color = "blue") +
+  labs(title = "Linearity Check: BA vs Logit", x = "BA", y = "Logit")
+
+ggplot(Election08, aes(x = Dem.Rep, y = logit)) +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE, color = "blue") +
+  labs(title = "Linearity Check: Dem.Rep vs Logit", x = "Dem.Rep", y = "Logit")
 ```
 
 Thus, the linearity condition was assessed using empirical logit plots, which confirmed an approximately linear relationship between the predictors (Income, HS, BA, Dem.Rep) and the log odds of the election outcome (ObamaWin). This supports the validity of the logistic regression model.
