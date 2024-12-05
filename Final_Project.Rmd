@@ -123,18 +123,17 @@ The conditions for logistic regressions are linearity, randomness, and independe
 
 ```{r}
 empirical_logit_plot <- function(data, predictor, response) {
+  # Group data into bins of the predictor
   bins <- cut(data[[predictor]], breaks = 10)
   bin_means <- tapply(data[[predictor]], bins, mean, na.rm = TRUE)
   bin_probs <- tapply(data[[response]], bins, mean, na.rm = TRUE)
-  
-
   bin_logits <- log(bin_probs / (1 - bin_probs))
-
+  
   plot_data <- data.frame(
     Predictor = bin_means,
     EmpiricalLogit = bin_logits
   )
-  
+
   ggplot(plot_data, aes(x = Predictor, y = EmpiricalLogit)) +
     geom_point() +
     geom_smooth(method = "loess", se = FALSE, color = "blue") +
