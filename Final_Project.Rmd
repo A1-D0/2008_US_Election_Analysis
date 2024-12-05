@@ -48,7 +48,7 @@ The following modeling process is used to achieve this objective:
    - To account for the interaction and combined effect of all predictors on the election outcome.
    - This model provides a more comprehensive understanding of how socioeconomic and political factors collectively influence voting patterns.
 3. Model Comparison:
-   - We evaluate the models using performance metrics such as SSE, SSR, R-squared, and adjusted R-squared. This helps determine which model best explains the variability in the election outcomes.
+   - We evaluate the models using performance metrics such as G-tests and AIC. This helps determine which model best explains the variability in the election outcomes.
 
 Why Choose Logistic Regression?
 1. Suitability for Binary Outcomes: Logistic regression is tailored explicitly for binary response variables like ObamaWin.
@@ -148,13 +148,17 @@ models <- list(
   DemRep = glm(formula = ObamaWin ~ Dem.Rep, data = Election08, family = "binomial")
 )
 ```
+
 # Summary of the Simple Logistic Regression Models
 ```{r}
 lapply(models, summary)
 ```
 
+Based on the summary of the simple logistic models, the AIC values are identified as follows:
+1. AIC : 52.867
+
 # Multiple Logistic Regression Model Construction
-```{r}
+```{r message=FALSE, warning=FALSE}
 final_model <- glm(formula = ObamaWin ~ Income + HS + BA + Dem.Rep, data = Election08, family = "binomial")
 ```
 
@@ -196,6 +200,12 @@ p_value_g_test <- pchisq(G, df, lower.tail = FALSE)
 print(p_value_g_test)
 ```
 
+# Statistical Inference
+```{r message=FALSE, warning=FALSE}
+conf_intervals <- confint(final_model)
+print(conf_intervals)
+```
+
 # Results & Interpretation
 1. Simple Logistic Regression Models:
    - Each predictor (Income, HS, BA, and Dem.Rep) was independently analyzed for its relationship with the likelihood of Barack Obama winning a state.
@@ -210,14 +220,35 @@ print(p_value_g_test)
 
 3. Model Comparison:
    - The multiple logistic regression model performed better than the simple models.
-   - The G-test confirmed that the combined model explains significantly more variability in the election outcomes compared to the null model (p < 0.001).
+   - The G-test confirmed that the final model explains significantly more variability in the election outcomes compared to the null model (p < 0.001).
+   
+4. Confidence Interval
+   - Income:
+     - 95% CI: (0.0000357, 0.0022718)
+     - Interpretation: For every 1-unit increase in per capita income (in dollars), the log-odds of Obama winning increases by a value between 0.0000357 and 0.0022718, holding all other predictors constant. 
+     - Since the interval does not include 0, Income is likely to have a statistically significant, positive effect on the likelihood of Obama winning.
 
-# Interpretation
+   - HS (Percentage of High School Graduates):
+     - 95% CI: (-0.6186, 1.2225)
+     - Interpretation: For every 1% increase in high school education attainment, the log-odds of Obama winning changes between -0.6186 and 1.2225, holding all other predictors constant.
+     - The interval includes 0, suggesting that the effect of high school education on the likelihood of Obama winning is not statistically significant in this model.
+
+   - BA (Percentage of Bachelor's Degree Holders):
+     - 95% CI: (-0.1817, 1.4939)
+     - Interpretation: For every 1% increase in college education attainment, the log-odds of Obama winning changes between -0.1817 and 1.4939, holding all other predictors constant.
+     - The interval includes 0, indicating that the effect of college education on the likelihood of Obama winning is not statistically significant.
+
+   - Dem.Rep (Difference in Percent Democrat and Percent Republican):
+     - 95% CI: (0.2655, 1.4789)
+     - Interpretation: For every 1% increase in the difference between Democratic and Republican support, the log-odds of Obama winning increases by a value between 0.2655 and 1.4789, holding all other predictors constant.
+     - Since the interval does not include 0, Dem.Rep is statistically significant, and its positive effect highlights it as the most influential factor in the model.
+
+# Key Findings
 1. The analysis confirms that political leaning (Dem.Rep) is the strongest predictor of the 2008 presidential election results. This aligns with the hypothesis that states with a higher Democrat-Republican margin were more likely to vote for Barack Obama。
 2. While socioeconomic factors (Income, HS, and BA) are individually significant in some cases, their effects diminish when combined with Dem.Rep, likely due to overlapping explanatory power.
 3. The multiple logistic regression model outperforms the simple models by capturing the joint effects of all predictors, making it the most effective approach for predicting state-level election outcomes.
 
-# Key Findings
+# Answers to the Research Questions
 1. Dem.Rep explains the majority of the variation in the election outcomes.
 2. The multiple logistic regression model provides the best predictive performance due to its ability to account for interactions and combined effects of predictors.
 
