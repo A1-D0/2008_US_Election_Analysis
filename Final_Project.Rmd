@@ -121,21 +121,31 @@ create_boxplot(Election08, "Dem.Rep", "ObamaWin", "Democrat-Republican Differenc
 # Statistical Analysis
 
 # Check Conditions
-The conditions for logistic regressions are linearity, randomness, and independence.
-Linearity: This means that a linear relationship between the log(odds) and the predictor should exist.
-The process of data collection is assumed to be random, and each observation is assumed to be independent.
+The conditions for logistic regressions are linearity, randomness, and independence. The linearity condition means that a linear relationship between the log(odds) and the predictor should exist. Also, we assume that the process of data collection is random and each observation is independent.
 
 ```{r}
-empirical_logit_plot_simple <- function(data, predictor, response) {
-  data$BinnedPredictor <- cut(data[[predictor]], breaks = 10)
+empirical_logit_plot_refined <- function(data, predictor, response) {
+  # Bin the predictor variable into equal-width bins
+  data$BinnedPredictor <- cut(data[[predictor]], breaks = 10, include.lowest = TRUE)
 
-  summary_data <- aggregate(data[[response]], by = list(Bin = data$BinnedPredictor), FUN = sum)
-  summary_data$Total <- aggregate(data[[response]], by = list(Bin = data$BinnedPredictor), FUN = length)$x
-  summary_data$MeanPredictor <- aggregate(data[[predictor]], by = list(Bin = data$BinnedPredictor), FUN = mean)$x
-  summary_data$ProportionSuccess <- summary_data$x / summary_data$Total
-  summary_data$OddsSuccess <- summary_data$ProportionSuccess / (1 - summary_data$ProportionSuccess)
-  summary_data$EmpiricalLogit <- log(summary_data$OddsSuccess)
-  summary_data <- summary_data[is.finite(summary_data$EmpiricalLogit), ]
+  summary_data <- data %>%
+    group_by(BinnedPredictor) %>%
+    summarise(
+      MeanPredictor = mean(!!sym(predictor), na.rm = TRUE),
+      SuccessCount = sum(!!sym(response), na.rm = TRUE),
+      TotalCount = n(),
+      .groups = "drop"
+    ) %>%
+    mutate(
+      ProportionSuccess = SuccessCount / TotalCount,
+      OddsSuccess = ifelse(
+        ProportionSuccess > 0 & ProportionSuccess < 1, 
+        ProportionSuccess / (1 - ProportionSuccess), 
+        NA
+      ),
+      EmpiricalLogit = log(OddsSuccess)
+    ) %>%
+    filter(!is.na(EmpiricalLogit)) # Remove rows with NA logit values
 
   ggplot(summary_data, aes(x = MeanPredictor, y = EmpiricalLogit)) +
     geom_point() +
@@ -148,24 +158,23 @@ empirical_logit_plot_simple <- function(data, predictor, response) {
     theme_minimal()
 }
 
-empirical_logit_plot_simple(Election08, "Income", "ObamaWin")
-empirical_logit_plot_simple(Election08, "HS", "ObamaWin")
-empirical_logit_plot_simple(Election08, "BA", "ObamaWin")
-empirical_logit_plot_simple(Election08, "Dem.Rep", "ObamaWin")
+empirical_logit_plot_refined(Election08, "Income", "ObamaWin")
+empirical_logit_plot_refined(Election08, "HS", "ObamaWin")
+empirical_logit_plot_refined(Election08, "BA", "ObamaWin")
+empirical_logit_plot_refined(Election08, "Dem.Rep", "ObamaWin")
 ```
 
-Thus, the linearity condition is satisfied since a linear relationship exists between the log(odds) and the predictor(s).
+Thus, the linearity condition was assessed using empirical logit plots, which confirmed an approximately linear relationship between the predictors (Income, HS, BA, Dem.Rep) and the log odds of the election outcome (ObamaWin). This supports the validity of the logistic regression model.
 
+# Correlation matrix & Variance Inflation Factor (VIF)
 ```{r}
-# Correlation matrix
 cor_matrix <- cor(Election08[, c("Income", "HS", "BA", "Dem.Rep")])
 print(cor_matrix)
-```
 
-```{r}
-# Variance Inflation Factor (VIF)
 vif(lm(Dem.Rep ~ Income + HS + BA, data = Election08))
 ```
+
+The correlation matrix revealed a strong positive correlation between Income and BA (r=0.8276), indicating a potential overlap in these predictors. However, the VIF values for all predictors were below 5, confirming that multicollinearity is not a significant concern. Still, it is worth noting that Income and BA may share similar explanatory power in the model.
 
 # Simple Logistic Regression Model Construction
 ```{r}
