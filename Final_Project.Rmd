@@ -34,7 +34,7 @@ The goal of our study is to use logistic regression to determine which state-lev
 Among political leaning, education level, and income, what is the most influential factor in predicting the presidential election result in 2008? Is the multiple logistic regression model more effective in predicting the election result than the simple logistic regression model?
 
 # Hypothesis
-We assume that political leaning is the most influential factor in predicting the election win, and the multiple logistic regression model will be the best model to predict the election win,
+We assume that political leaning is the most influential factor, and the multiple logistic regression model will be the best model to predict the election win.
 
 # Methodology
 The dataset of reference contains information from all 50 states and the District of Columbia for the 2008 U.S. presidential election. This analysis consists of 5 models, 4 of which investigate if **Income**, **HS**, **BA**, and **Dem.Rep** are associated with the odds that Obama (Democrat) wins the state in 2008 (**ObamaWin** = 1), and 1 of which is an interaction model that investigates the joint effect of these four variables.
