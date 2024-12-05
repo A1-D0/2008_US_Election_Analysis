@@ -4,7 +4,7 @@ output:
   html_document: default
 ---
 ---
-title: "Exploration of the Influential Factor of the Election Results in 2008"
+title: "Exploration of the Influential Factor of the Election Results in 2008 Using Logistic Regression Models"
 author: "Daisy, Mike, and Osvaldo"
 output: pdf_document
 date: "2024-12-05"
@@ -25,77 +25,98 @@ data("Election08")
 ```
 
 # Abstract
-This study examines state-level factors predicting whether Barack Obama or John McCain won the 2008 U.S. presidential election. By leveraging both simple and multiple linear regression models, we aim to determine the most effective linear model to adopt for our final logistic regression model. In our context, we implement logistic regression models to analyze and compare predictors, identifying the most significant contributors to election outcomes. As a result, we reveal which predictors are most influential for predicting who won the 2008 U.S. election.
+This study investigates state-level factors to predict whether Barack Obama or John McCain won the 2008 U.S. presidential election. Using both simple and multiple logistic regression models, we analyze predictors such as income, education levels, and political leaning to determine their relationship with election outcomes. Empirical logit plots are employed to verify the linearity assumption for logistic regression, ensuring the validity of the models. Our analysis identifies the most significant contributors to predicting election results and evaluates the effectiveness of the multiple logistic regression model compared to simpler models. The findings provide insights into the factors most influential in determining the outcome of the 2008 U.S. presidential election.
 
 # Introduction
-The goal of our study is to use logistic regression to determine which state-level socioeconomic and political factors most effectively predict the 2008 U.S. election results based on the Election08 dataset. This analysis helps us understand the relationships among predictors such as income, education levels, and political leanings.
+The purpose of this study is to investigate the state-level socioeconomic and political factors that most effectively predict the outcomes of the 2008 U.S. presidential election using the **Election08** dataset. By applying logistic regression models, we aim to explore the relationships between predictors such as per capita income, educational attainment, and political leaning, and their impact on election results. This analysis seeks to identify the most influential factors driving voting behavior across the 50 states and the District of Columbia.
 
 # Research Question
 Among political leaning, education level, and income, what is the most influential factor in predicting the presidential election result in 2008? Is the multiple logistic regression model more effective in predicting the election result than the simple logistic regression model?
 
-# Hypothesis
-We assume that political leaning is the most influential factor, and the multiple logistic regression model will be the best model to predict the election win.
+# Expected Findings
+We anticipate that political leaning, as measured by the difference between the percentage of Democrats and Republicans in each state (Dem.Rep), will be the most influential factor in determining the outcome of the 2008 U.S. presidential election. States with a higher proportion of Democrats relative to Republicans are expected to have a higher likelihood of being won by Barack Obama.
+Additionally, we hypothesize that a multiple logistic regression model incorporating multiple predictors, including Income, HS, BA, and Dem.Rep, will provide the most accurate predictions of election outcomes. This is because the interaction of socioeconomic factors with political alignment likely captures more nuanced variations in voting behavior than single-variable models. The multivariable approach is expected to demonstrate the best fit and predictive power, as assessed by appropriate statistical metrics.
 
 # Methodology
 The dataset of reference contains information from all 50 states and the District of Columbia for the 2008 U.S. presidential election. This analysis consists of 5 models, 4 of which investigate if **Income**, **HS**, **BA**, and **Dem.Rep** are associated with the odds that Obama (Democrat) wins the state in 2008 (**ObamaWin** = 1), and 1 of which is an interaction model that investigates the joint effect of these four variables.
 
+# Rationale: Explanation of the Modeling Process and Method Choice
+
+The primary goal of this project is to predict state-level election outcomes for the 2008 U.S. presidential election. The dependent variable, `ObamaWin`, is categorical (1 = Obama won, 0 = McCain won), making logistic regression the most appropriate modeling technique. Logistic regression is specifically designed to model binary outcomes by estimating the probability of a success (in this case, Obama winning a state) as a function of predictor variables.
+
+The following modeling process is used to achieve this objective:
+1. Simple Logistic Regression:
+   - To explore the relationship between each predictor (`Income`, `HS`, `BA`, `Dem.Rep`) and the dependent variable independently.
+   - This step allows us to identify which variables are individually significant predictors of the election outcome.
+2. Multiple Logistic Regression:
+   - To account for the interaction and combined effect of all predictors on the election outcome.
+   - This model provides a more comprehensive understanding of how socioeconomic and political factors collectively influence voting patterns.
+3. Model Comparison:
+   - We evaluate the models using performance metrics such as SSE, SSR, R-squared, and adjusted R-squared. This helps determine which model best explains the variability in the election outcomes.
+
+Why Choose Logistic Regression?
+1. Suitability for Binary Outcomes**: Logistic regression is tailored explicitly for binary response variables like `ObamaWin`.
+2. Probabilistic Interpretation**: The model outputs probabilities, allowing us to estimate the likelihood of Obama winning in each state.
+3. Flexibility with Predictors**: Logistic regression can handle a mix of numerical predictors (e.g., `Income`, `Dem.Rep`) and their potential interactions.
+4. Diagnostic Tools**: Logistic regression provides tools to assess model fit, assumptions, and variable importance, ensuring robust and interpretable results.
+
+This methodological approach is comprehensive yet efficient, ensuring that our findings are both statistically valid and practically relevant for understanding the factors influencing the 2008 election outcomes.
 
 # Dataset Overview
+### Description of the Dataset
 
-## Description of the dataset
-It is important to understand the factors that influenced voting behavior across different states in analyzing the 2008 U.S. presidential election results. We are interested in exploring how demographic variables and educational attainment correlate with the likelihood of Barack Obama's winning in various states.
+The **Election08** dataset provides state-by-state information related to the 2008 U.S. presidential election. It includes seven variables, capturing key socioeconomic, educational, and political characteristics of each state alongside the election outcome. These variables enable an in-depth analysis of the factors contributing to Barack Obama's or John McCain's victories in individual states.
 
-## Definition of variables
-The dataset includes 51 observations (50 states + DC) with variables related to income, education, and political alignment. The dependent variable is `ObamaWin`, a binary outcome (1 = Obama won the state, 0 = McCain won the state).
-Independent variables are:  
-1. **Income**: Per capita income in the state as of 2007 (in US dollars).  
-2. **HS**: Percentage of adults with at least a high school education.  
-3. **BA**: Percentage of adults with at least a college education.  
-4. **Dem.Rep**: Difference in percent Democrat and percent Republican (according to 2008 Gallup survey).
+### Data Variable Dictionary
 
+- **State**: Name of the state.
+- **Abr**: Abbreviation for the state.
+- **Income**: Per capita income in the state as of 2007 (in US dollars).
+- **HS**: Percentage of adults with at least a high school education.
+- **BA**: Percentage of adults with at least a college education.
+- **Dem.Rep**: Difference in percent Democrat and percent Republican (based on a 2008 Gallup survey).
+- **ObamaWin**: 
+  - `1`: Obama (Democrat) won the state in 2008.
+  - `0`: McCain (Republican) won the state in 2008.
+
+### Dataframe Details
+
+- **Observations**: 51 (50 states plus the District of Columbia).
+- **Variables**: 7 (6 predictors and 1 dependent variable).
+
+### Context and Relevance
+
+Understanding the demographic and socioeconomic factors that influence voting behavior is critical for political strategy and policy analysis. This study examines how variables such as income and education correlate with election outcomes, shedding light on patterns in state-level voting behavior. By focusing on the differences between Democratic and Republican political affiliations, this analysis highlights key dynamics in electoral decision-making.
+
+### Data Sources
+
+- **Income Data**: U.S. Census Bureau, Table 659. Personal Income Per Capita (2007).
+- **High School Education Data**: U.S. Census Bureau, 1990 Census of Population, [NCES Digest](http://nces.ed.gov/programs/digest/d08/tables/dt08_011.asp).
+- **College Education Data**: U.S. Census Bureau, Table 225. Educational Attainment by State (2007).
+- **Political Leaning Data**: Gallup, [State of the States: Political Party Affiliation](http://www.gallup.com/poll/114016/state-states-political-party-affiliation.aspx#1).
+
+This study provides a structured approach to understanding how state-level characteristics influenced the 2008 presidential election and offers insights into broader patterns of electoral behavior in the United States.
+
+# Visualization of Relationships Between Variables
 ```{r}
-str(Election08)
-summary(Election08)
+create_boxplot <- function(data, predictor, response, title, x_label) {
+  ggplot(data, aes(x = !!sym(predictor), y = factor(!!sym(response)), fill = factor(!!sym(response)))) +
+    geom_boxplot() +
+    labs(title = title, x = x_label, y = "Obama Win (1=Yes, 0=No)") +
+    scale_fill_manual(values = c("red", "blue")) +
+    theme_minimal()
+}
+create_boxplot(Election08, "Income", "ObamaWin", "Income vs ObamaWin", "Income")
+create_boxplot(Election08, "HS", "ObamaWin", "High School Education (%) vs ObamaWin", "HS (%)")
+create_boxplot(Election08, "BA", "ObamaWin", "Bachelor's Degree (%) vs ObamaWin", "BA (%)")
+create_boxplot(Election08, "Dem.Rep", "ObamaWin", "Democrat-Republican Difference vs ObamaWin", "Dem.Rep (%)")
 
 ```
-
 
 # Data Preparation
 ```{r}
-# Data cleaning and summary
 summary(Election08)
-
-# Visualize relationships
-# Boxplot: Income vs ObamaWin
-ggplot(Election08, aes(x = Income, y = factor(ObamaWin), fill = factor(ObamaWin))) +
-  geom_boxplot() +
-  labs(title = "Income vs ObamaWin", x = "Income", y = "Obama Win (1=Yes, 0=No)") +
-  scale_fill_manual(values = c("red", "blue")) +
-  theme_minimal()
-
-# Boxplot: HS vs ObamaWin
-ggplot(Election08, aes(x = HS, y = factor(ObamaWin), fill = factor(ObamaWin))) +
-  geom_boxplot() +
-  labs(title = "High School Education (%) vs ObamaWin", x = "HS (%)", y = "Obama Win (1=Yes, 0=No)") +
-  scale_fill_manual(values = c("red", "blue")) +
-  theme_minimal()
-
-# Boxplot: BA vs ObamaWin
-ggplot(Election08, aes(x = BA, y = factor(ObamaWin), fill = factor(ObamaWin))) +
-  geom_boxplot() +
-  labs(title = "Bachelor's Degree (%) vs ObamaWin", x = "BA (%)", y = "Obama Win (1=Yes, 0=No)") +
-  scale_fill_manual(values = c("red", "blue")) +
-  theme_minimal()
-
-# Boxplot: Dem.Rep vs ObamaWin
-ggplot(Election08, aes(x = Dem.Rep, y = factor(ObamaWin), fill = factor(ObamaWin))) +
-  geom_boxplot() +
-  labs(title = "Democrat-Republican Difference vs ObamaWin", x = "Dem.Rep (%)", y = "Obama Win (1=Yes, 0=No)") +
-  scale_fill_manual(values = c("red", "blue")) +
-  theme_minimal()
-
 ```
-
 
 # Statistical Analysis
 
@@ -103,86 +124,49 @@ ggplot(Election08, aes(x = Dem.Rep, y = factor(ObamaWin), fill = factor(ObamaWin
 The conditions for logistic regressions are linearity, randomness, and independence.
 Linearity: this means that there should exist a linear relationship between log(odds) and the predictor.
 The process of data collection is assumed to be random, and each observation is assumed to be independent.
-
 ```{r}
+empirical_logit_plot_simple <- function(data, predictor, response) {
+  # Bin the predictor variable
+  data$BinnedPredictor <- cut(data[[predictor]], breaks = 10)
 
-logistic_model <- glm(ObamaWin ~ Income + HS + BA + Dem.Rep, data = Election08, family = "binomial")
+  summary_data <- aggregate(data[[response]], by = list(Bin = data$BinnedPredictor), FUN = sum)
+  summary_data$Total <- aggregate(data[[response]], by = list(Bin = data$BinnedPredictor), FUN = length)$x
+  summary_data$MeanPredictor <- aggregate(data[[predictor]], by = list(Bin = data$BinnedPredictor), FUN = mean)$x
+  summary_data$ProportionSuccess <- summary_data$x / summary_data$Total
+  
+  summary_data$OddsSuccess <- summary_data$ProportionSuccess / (1 - summary_data$ProportionSuccess)
+  summary_data$EmpiricalLogit <- log(summary_data$OddsSuccess)
 
-Election08$logit <- predict(logistic_model, type = "link")  # Logit values
+  summary_data <- summary_data[is.finite(summary_data$EmpiricalLogit), ]
 
-ggplot(Election08, aes(x = Income, y = logit)) +
-  geom_point() +
-  geom_smooth(method = "loess", se = FALSE, color = "blue") +
-  labs(title = "Linearity Check: Income vs Logit", x = "Income", y = "Logit")
-
-ggplot(Election08, aes(x = HS, y = logit)) +
-  geom_point() +
-  geom_smooth(method = "loess", se = FALSE, color = "blue") +
-  labs(title = "Linearity Check: HS vs Logit", x = "HS", y = "Logit")
-
-ggplot(Election08, aes(x = BA, y = logit)) +
-  geom_point() +
-  geom_smooth(method = "loess", se = FALSE, color = "blue") +
-  labs(title = "Linearity Check: BA vs Logit", x = "BA", y = "Logit")
-
-ggplot(Election08, aes(x = Dem.Rep, y = logit)) +
-  geom_point() +
-  geom_smooth(method = "loess", se = FALSE, color = "blue") +
-  labs(title = "Linearity Check: Dem.Rep vs Logit", x = "Dem.Rep", y = "Logit")
-
-# Function to compute empirical logit and create the plot
-empirical_logit_tidy <- function(data, predictor, response) {
-  # Create bins for the predictor and calculate empirical logits
-  emp_log <- data %>%
-    mutate(BinnedPredictor = cut(!!sym(predictor), breaks = 10)) %>% # Bin the predictor
-    group_by(BinnedPredictor) %>%
-    summarize(
-      MeanPredictor = mean(!!sym(predictor), na.rm = TRUE), # Mean of the predictor in each bin
-      SuccessCount = sum(!!sym(response)), # Count of successes
-      TotalCount = n(), # Total count in each bin
-      ProportionSuccess = SuccessCount / TotalCount # Proportion of successes
-    ) %>%
-    mutate(
-      OddsSuccess = ProportionSuccess / (1 - ProportionSuccess), # Odds of success
-      EmpiricalLogit = log(OddsSuccess) # Logit (log-odds)
-    ) %>%
-    filter(!is.infinite(EmpiricalLogit)) # Remove bins with infinite logits
+  ggplot(summary_data, aes(x = MeanPredictor, y = EmpiricalLogit)) +
+    geom_point() +
+    geom_smooth(method = "loess", se = FALSE, color = "blue") +
+    labs(
+      title = paste("Empirical Logit Plot for", predictor),
+      x = predictor,
+      y = "Empirical Logit"
+    ) +
+    theme_minimal()
 }
 
-# Plot empirical logit vs predictor
-
-
-## EDIT THIS FUNCTION BELOW BASED ON THE empirical_logit_tidy FUNCTION ABOVE
-
-# ggplot(emp_log, aes(x = MeanPredictor, y = EmpiricalLogit)) +
-#   geom_point() +
-#   geom_smooth(method = "loess", se = FALSE, color = "blue") +
-#   labs(title = paste("Empirical Logit Plot for", predictor),
-#        x = predictor,
-#        y = "Empirical Logit") +
-#   theme_minimal()
-
-# Generate empirical logit plots for each predictor
-empirical_logit_tidy(Election08, "Income", "ObamaWin")
-empirical_logit_tidy(Election08, "HS", "ObamaWin")
-empirical_logit_tidy(Election08, "BA", "ObamaWin")
-empirical_logit_tidy(Election08, "Dem.Rep", "ObamaWin")
-
+empirical_logit_plot_simple(Election08, "Income", "ObamaWin")
+empirical_logit_plot_simple(Election08, "HS", "ObamaWin")
+empirical_logit_plot_simple(Election08, "BA", "ObamaWin")
+empirical_logit_plot_simple(Election08, "Dem.Rep", "ObamaWin")
 ```
-
 Thus, the linearity condition is satisfied since there exists a linear relationship between the log(odds) and the predictor(s).
-
 ```{r}
 # Correlation matrix
 cor_matrix <- cor(Election08[, c("Income", "HS", "BA", "Dem.Rep")])
 print(cor_matrix)
-
+```
+```{r}
 # Variance Inflation Factor (VIF)
 vif(lm(Dem.Rep ~ Income + HS + BA, data = Election08))
-
 ```
 
-## Logistic regression models
+Simple Logistic Regression Model Construction
 ```{r}
 # Logistic regression for each predictor
 models <- list(
@@ -191,85 +175,51 @@ models <- list(
   BA = glm(ObamaWin ~ BA, data = Election08, family = "binomial"),
   DemRep = glm(ObamaWin ~ Dem.Rep, data = Election08, family = "binomial")
 )
-
 ```
-
 
 ```{r}
 # Summarize models
 lapply(models, summary)
+```
 
-# optimized model
+Multiple Logistic Regression Model Construction
+```{r}
 final_model <- glm(ObamaWin ~ Income + HS + BA + Dem.Rep, data = Election08, family = "binomial")
 summary(final_model)
-
 ```
 
-
-## Model Comparison
-```{r}
-compare_metrics <- function(model, data, response) {
-  # Predicted probabilities
-  preds <- predict(model, type = "response")
-  # Binary classification (threshold = 0.5)
-  preds_class <- ifelse(preds > 0.5, 1, 0)
-  
-  # SSE: Sum of Squares for Error
-  sse <- sum((data[[response]] - preds_class)^2)
-  
-  # SSM: Sum of Squares for Model
-  mean_response <- mean(data[[response]])
-  ssm <- sum((preds_class - mean_response)^2)
-  
-  # SSR: Total Sum of Squares
-  ssr <- sum((data[[response]] - mean_response)^2)
-  
-  # R-squared
-  r_squared <- 1 - (sse / ssr)
-  
-  # Adjusted R-squared
-  n <- nrow(data)
-  p <- length(coef(model)) - 1
-  adj_r_squared <- 1 - ((1 - r_squared) * (n - 1) / (n - p - 1))
-  
-  list(SSE = sse, SSM = ssm, SSR = ssr, R_squared = r_squared, Adjusted_R_squared = adj_r_squared)
-}
-
-```
-##G-tests
+# Model Comparison by G-tests
 
 ```{r}
-
-##G-test for Income
+## G-test for Income
 G <- 69.737 - 48.867
 df <- 1
 p_value_g_test <- pchisq(G, df, lower.tail = FALSE)
 print(p_value_g_test)
 
-##G-test for HS
+## G-test for HS
 G <- 69.737 - 65.741
 df <- 1
 p_value_g_test <- pchisq(G, df, lower.tail = FALSE)
 print(p_value_g_test)
 
-##G-test for BA
+## G-test for BA
 G <- 69.737 - 49.689
 df <- 1
 p_value_g_test <- pchisq(G, df, lower.tail = FALSE)
 print(p_value_g_test)
 
-##G-test for DemRep
+## G-test for DemRep
 G <- 69.737 - 27.167
 df <- 1
 p_value_g_test <- pchisq(G, df, lower.tail = FALSE)
 print(p_value_g_test)
 
-##G-test for Final Model
+## G-test for Final Model
 G <- 69.737 - 9.7252
 df <- 4
 p_value_g_test <- pchisq(G, df, lower.tail = FALSE)
 print(p_value_g_test)
-
 ```
 
 
