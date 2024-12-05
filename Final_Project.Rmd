@@ -38,7 +38,7 @@ Is the multiple regression model more effective in predicting the election resul
 Note the target population.
 
 # Methodology
-The dataset of reference contains information from all 50 states and the District of Columbia for the 2008 U.S. presidential election. This analysis consists of 5 models, 4 of which investigate if **Income** (the Per capita income in the state as of 2007 (in dollars)), **HS** (percentage of adults with at least a high school education), **BA** (percentage of adults with at least a high school education), and **Dem.Rep** (the difference in the percentage of Democrats and the percentage of Republicans) is associated with the odds that Obama (Democrat) wins state in 2008 (**ObamaWin** = 1), and 1 of which is an interaction model that investigates the joint effect of these four variables.
+The dataset of reference contains information from all 50 states and the District of Columbia for the 2008 U.S. presidential election. This analysis consists of 5 models, 4 of which investigate if **Income**, **HS**, **BA**, and **Dem.Rep** is associated with the odds that Obama (Democrat) wins state in 2008 (**ObamaWin** = 1), and 1 of which is an interaction model that investigates the joint effect of these four variables.
 
 
 # Dataset Overview
