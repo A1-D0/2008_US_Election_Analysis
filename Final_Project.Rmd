@@ -122,36 +122,41 @@ create_boxplot(Election08, "Dem.Rep", "ObamaWin", "Democrat-Republican Differenc
 The conditions for logistic regressions are linearity, randomness, and independence. The linearity condition means that a linear relationship between the log(odds) and the predictor should exist. Also, we assume that the process of data collection is random and that each observation is independent.
 
 ```{r}
-empirical_logit_tidy <- function(data, predictor, response) {
-  # Create bins for the predictor and calculate empirical logits
-  emp_log <- data %>%
-    mutate(BinnedPredictor = cut(!!sym(predictor), breaks = 10)) %>%
+library(dplyr)
+library(ggplot2)
+
+# Function to create empirical logit plots
+empirical_logit_plot <- function(data, predictor, response) {
+  data %>%
+    mutate(BinnedPredictor = cut(!!sym(predictor), breaks = 10)) %>%  # Bin predictor into 10 intervals
     group_by(BinnedPredictor) %>%
     summarize(
-      MeanPredictor = mean(!!sym(predictor), na.rm = TRUE),
-      SuccessCount = sum(!!sym(response)),
-      TotalCount = n(),
-      ProportionSuccess = SuccessCount / TotalCount
+      MeanPredictor = mean(!!sym(predictor), na.rm = TRUE),  # Mean of predictor within each bin
+      SuccessCount = sum(!!sym(response)),  # Count of successes (ObamaWin = 1)
+      TotalCount = n(),  # Total count within each bin
+      ProportionSuccess = SuccessCount / TotalCount  # Proportion of successes
     ) %>%
     mutate(
-      OddsSuccess = ProportionSuccess / (1 - ProportionSuccess),
-      EmpiricalLogit = log(OddsSuccess)
+      OddsSuccess = ProportionSuccess / (1 - ProportionSuccess),  # Calculate odds
+      EmpiricalLogit = log(OddsSuccess)  # Calculate logit (log-odds)
     ) %>%
-    filter(!is.infinite(EmpiricalLogit))
-  
-  ggplot(emp_log, aes(x = MeanPredictor, y = EmpiricalLogit)) +
+    filter(!is.infinite(EmpiricalLogit)) %>%  # Remove rows with infinite logits
+    ggplot(aes(x = MeanPredictor, y = EmpiricalLogit)) +
     geom_point() +
     geom_smooth(method = "loess", se = FALSE, color = "blue") +
-    labs(title = paste("Empirical Logit Plot for", predictor),
-         x = predictor,
-         y = "Empirical Logit") +
+    labs(
+      title = paste("Empirical Logit Plot for", predictor),
+      x = predictor,
+      y = "Empirical Logit"
+    ) +
     theme_minimal()
 }
 
-empirical_logit_tidy(Election08, "Income", "ObamaWin")
-empirical_logit_tidy(Election08, "HS", "ObamaWin")
-empirical_logit_tidy(Election08, "BA", "ObamaWin")
-empirical_logit_tidy(Election08, "Dem.Rep", "ObamaWin")
+# Generate empirical logit plots for each predictor
+empirical_logit_plot(Election08, "Income", "ObamaWin")
+empirical_logit_plot(Election08, "HS", "ObamaWin")
+empirical_logit_plot(Election08, "BA", "ObamaWin")
+empirical_logit_plot(Election08, "Dem.Rep", "ObamaWin")
 ```
 
 Thus, the linearity condition was assessed using empirical logit plots, which confirmed an approximately linear relationship between the predictors (Income, HS, BA, Dem.Rep) and the log odds of the election outcome (ObamaWin). This supports the validity of the logistic regression model.
