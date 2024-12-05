@@ -1,20 +1,9 @@
 ---
-output:
-  pdf_document: default
-  html_document: default
----
----
 title: "Exploration of the Influential Factor of the Election Results in 2008 Using Logistic Regression Models"
 author: "Daisy, Mike, and Osvaldo"
 output: pdf_document
 date: "2024-12-05"
 ---
-
-```{r setup, echo=FALSE}
-# consider removing code from knit file
-knitr::opts_chunk$set(echo = FALSE)
-
-```
 
 ```{r, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 library(Stat2Data)
