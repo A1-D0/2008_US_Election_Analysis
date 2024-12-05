@@ -24,13 +24,13 @@ library(car)
 data("Election08")
 ```
 
-## Abstract
+# Abstract
 This study examines state-level factors predicting whether Barack Obama or John McCain won the 2008 U.S. presidential election. By leveraging both simple and multiple linear regression models, we aim to determine the most effective linear model to adopt for our final logistic regression model. In our context, we implement logistic regression models to analyze and compare predictors, identifying the most significant contributors to election outcomes. As a result, we reveal which predictors are most influential for predicting who won the 2008 U.S. election.
 
-## Introduction
+# Introduction
 The goal of our study is to use logistic regression to determine which state-level socioeconomic and political factors most effectively predict the 2008 U.S. election results based on the Election08 dataset. This analysis helps us understand the relationships among predictors such as income, education levels, and political leanings.
 
-## Research Question
+# Research Question
 Among political leaning, education level, and income, what is the most influential factor in predicting the presidential election result in 2008?
 Is the multiple regression model more effective in predicting the election result than the single regression models?
 
@@ -38,20 +38,21 @@ Is the multiple regression model more effective in predicting the election resul
 Note the target population.
 
 # Methodology
-The dataset of reference contains information from all 50 states and the District of Columbia for the 2008 U.S. presidential election. This analysis consists of 5 models, 4 of which investigate if Income (the Per capita income in the state as of 2007 (in dollars)), HS (percentage of adults with at least a high school education), BA (percentage of adults with at least a high school education), and Dem.Rep (the difference in the percentage of Democrats and the percentage of Republicans) is associated with the odds that Obama (Democrat) wins state in 2008 (ObamaWin = 1), and 1 of which is an interaction model that investigates the joint effect of these four variables.
+The dataset of reference contains information from all 50 states and the District of Columbia for the 2008 U.S. presidential election. This analysis consists of 5 models, 4 of which investigate if **Income** (the Per capita income in the state as of 2007 (in dollars)), **HS** (percentage of adults with at least a high school education), **BA** (percentage of adults with at least a high school education), and **Dem.Rep** (the difference in the percentage of Democrats and the percentage of Republicans) is associated with the odds that Obama (Democrat) wins state in 2008 (**ObamaWin** = 1), and 1 of which is an interaction model that investigates the joint effect of these four variables.
 
 
-## Dataset Overview
-# Description of the dataset
+# Dataset Overview
+
+## Description of the dataset
 It is important to understand the factors that influenced voting behavior across different states in analyzing the 2008 U.S. presidential election results. We are interested in exploring how demographic variables and educational attainment correlate with the likelihood of Barack Obama's winning in various states.
 
-# Definition of variables
+## Definition of variables
 The dataset includes 51 observations (50 states + DC) with variables related to income, education, and political alignment. The dependent variable is `ObamaWin`, a binary outcome (1 = Obama won the state, 0 = McCain won the state).
-Independent variables are:
-1. Income: Per capita income in the state as of 2007 (in US dollars).
-2. HS: Percentage of adults with at least a high school education.
-3. BA: Percentage of adults with at least a college education.
-4. Dem.Rep: Difference in percent Democrat and percent Republican (according to 2008 Gallup survey).
+Independent variables are:  
+1. **Income**: Per capita income in the state as of 2007 (in US dollars).  
+2. **HS**: Percentage of adults with at least a high school education.  
+3. **BA**: Percentage of adults with at least a college education.  
+4. **Dem.Rep**: Difference in percent Democrat and percent Republican (according to 2008 Gallup survey).
 
 ```{r}
 data(Election08)
@@ -61,7 +62,7 @@ summary(Election08)
 ```
 
 
-## Data Preparation
+# Data Preparation
 ```{r}
 # Data cleaning and summary
 summary(Election08)
@@ -98,9 +99,9 @@ ggplot(Election08, aes(x = Dem.Rep, y = factor(ObamaWin), fill = factor(ObamaWin
 ```
 
 
-## Statistical Analysis
+# Statistical Analysis
 
-# Check Conditions
+## Check Conditions
 The conditions for logistic regressions are linearity, randomness, and independence.
 Linearity: this means that there should exist a linear relationship between log(odds) and the predictor.
 The process of data collection is assumed to be random, and each observation is assumed to be independent.
@@ -191,7 +192,7 @@ vif(lm(Dem.Rep ~ Income + HS + BA, data = Election08))
 
 ```
 
-# Logistic regression models
+## Logistic regression models
 ```{r}
 # Logistic regression for each predictor
 models <- list(
@@ -215,7 +216,7 @@ summary(final_model)
 ```
 
 
-# Model Comparison
+## Model Comparison
 ```{r}
 compare_metrics <- function(model, data, response) {
   # Predicted probabilities
@@ -247,10 +248,10 @@ compare_metrics <- function(model, data, response) {
 ```
 
 
-## Results
+# Results
 
-# Interpretation
+## Interpretation
 
-## Suggestions for future research
+# Suggestions for future research
 
-## Conclusion
+# Conclusion
