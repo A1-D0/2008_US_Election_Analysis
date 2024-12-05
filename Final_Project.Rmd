@@ -1,10 +1,12 @@
 ---
-title: "Exploration of the Influential Factor of the Election Results in 2008 Using Logistic Regression Models"
+title: Exploration of the Influential Factor of the Presidential Election Results in 2008 Using
+  Logistic Regression Models
 author: "Daisy, Mike, and Osvaldo"
-output: pdf_document
 date: "2024-12-05"
+output:
+  pdf_document:
+    latex_engine: xelatex
 ---
-
 ```{r, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 library(Stat2Data)
 library(ggplot2)
@@ -17,7 +19,7 @@ data("Election08")
 This study investigates state-level factors to predict whether Barack Obama or John McCain won the 2008 U.S. presidential election. Using both simple and multiple logistic regression models, we analyze predictors such as income, education levels, and political leaning to determine their relationship with election outcomes. Empirical logit plots are employed to verify the linearity assumption for logistic regression, ensuring the validity of the models. Our analysis identifies the most significant contributors to predicting election results and evaluates the effectiveness of the multiple logistic regression model compared to simpler models. The findings provide insights into the factors most influential in determining the outcome of the 2008 U.S. presidential election.
 
 # Introduction
-This study investigates the state-level socioeconomic and political factors that most effectively predicted the outcomes of the 2008 U.S. presidential election using the **Election08** dataset. By applying logistic regression models, we aim to explore the relationships between predictors such as per capita income, educational attainment, and political leaning and their impact on election results. This analysis seeks to identify the most influential factors driving voting behavior across the 50 states and the District of Columbia.
+This study investigates the state-level socioeconomic and political factors that most effectively predicted the outcomes of the 2008 U.S. presidential election using the Election08 dataset. By applying logistic regression models, we aim to explore the relationships between predictors such as per capita income, educational attainment, and political leaning and their impact on election results. This analysis seeks to identify the most influential factors driving voting behavior across the 50 states and the District of Columbia.
 
 # Research Question
 Which state-level factor—political leaning, education level, or income—is the most influential in predicting the outcome of the 2008 U.S. presidential election? Additionally, does a multiple logistic regression model provide better predictive performance compared to individual simple logistic regression models for this election?
@@ -26,22 +28,21 @@ Which state-level factor—political leaning, education level, or income—is th
 We anticipate that political leaning, as measured by the difference between the percentage of Democrats and Republicans in each state (Dem.Rep), will be the most influential factor in determining the outcome of the 2008 U.S. presidential election. States with a higher proportion of Democrats relative to Republicans are expected to have a higher likelihood of being won by Barack Obama.
 Additionally, we hypothesize that a multiple logistic regression model incorporating multiple predictors, including Income, HS, BA, and Dem.Rep, will provide the most accurate predictions of election outcomes. This is because the interaction of socioeconomic factors with political alignment likely captures more nuanced variations in voting behavior than single-variable models. The multivariable approach is expected to demonstrate the best fit and predictive power, as assessed by appropriate statistical metrics.
 
-# Context and Relevance:
+# Context and Relevance
 Understanding the demographic and socioeconomic factors that influence voting behavior is critical for political strategy and policy analysis. This study examines how variables such as income and education correlate with election outcomes, shedding light on patterns in state-level voting behavior. By focusing on the differences between Democratic and Republican political affiliations, this analysis highlights key dynamics in electoral decision-making.
 
-# Research Population:
-The research population consists of all 50 U.S. states and the District of Columbia, as represented in the **Election08** dataset. This includes data on state-level socioeconomic characteristics (per capita income, high school, and college education levels) and political leaning (difference in Democrat and Republican support). The population is analyzed to predict whether Barack Obama or John McCain won each state in the 2008 U.S. presidential election.
+# Research Population
+The research population consists of all 50 U.S. states and the District of Columbia, as represented in the Election08 dataset. This includes data on state-level socioeconomic characteristics (per capita income, high school, and college education levels) and political leaning (difference in Democrat and Republican support). The population is analyzed to predict whether Barack Obama or John McCain won each state in the 2008 U.S. presidential election.
 
 # Methodology
-This study provides a structured approach to understanding how state-level characteristics influenced the 2008 presidential election and offers insights into broader patterns of electoral behavior in the United States. The dataset of reference contains information from all 50 states and the District of Columbia for the 2008 U.S. presidential election. This analysis consists of 5 models, 4 of which investigate if Income, HS, BA, and Dem.Rep is associated with the odds that Obama (Democrat) wins the state in 2008 (**ObamaWin** = 1), and 1 of which is an interaction model that investigates the joint effect of these four variables.
+This study provides a structured approach to understanding how state-level characteristics influenced the 2008 presidential election and offers insights into broader patterns of electoral behavior in the United States. The dataset of reference contains information from all 50 states and the District of Columbia for the 2008 U.S. presidential election. This analysis consists of 5 models, 4 of which investigate if Income, HS, BA, and Dem.Rep is associated with the odds that Obama (Democrat) wins the state in 2008 (ObamaWin = 1), and 1 of which is an interaction model that investigates the joint effect of these four variables.
 
-# Rationale:
-
-The primary goal of this project is to predict state-level election outcomes for the 2008 U.S. presidential election. The dependent variable, `ObamaWin`, is categorical (1 = Obama won, 0 = McCain won), making logistic regression the most appropriate modeling technique. Logistic regression is specifically designed to model binary outcomes by estimating the probability of success (in this case, Obama winning a state) as a function of predictor variables.
+# Rationale
+The primary goal of this project is to predict state-level election outcomes for the 2008 U.S. presidential election. The dependent variable, ObamaWin, is categorical (1 = Obama won, 0 = McCain won), making logistic regression the most appropriate modeling technique. Logistic regression is specifically designed to model binary outcomes by estimating the probability of success (in this case, Obama winning a state) as a function of predictor variables.
 
 The following modeling process is used to achieve this objective:
 1. Simple Logistic Regression:
-   - To explore the relationship between each predictor (`Income`, `HS`, `BA`, `Dem.Rep`) and the dependent variable independently.
+   - To explore the relationship between each predictor (Income, HS, BA, Dem.Rep) and the dependent variable independently.
    - This step allows us to identify which variables are individually significant predictors of the election outcome.
 2. Multiple Logistic Regression:
    - To account for the interaction and combined effect of all predictors on the election outcome.
@@ -50,16 +51,16 @@ The following modeling process is used to achieve this objective:
    - We evaluate the models using performance metrics such as SSE, SSR, R-squared, and adjusted R-squared. This helps determine which model best explains the variability in the election outcomes.
 
 Why Choose Logistic Regression?
-1. Suitability for Binary Outcomes: Logistic regression is tailored explicitly for binary response variables like `ObamaWin`.
+1. Suitability for Binary Outcomes: Logistic regression is tailored explicitly for binary response variables like ObamaWin.
 2. Probabilistic Interpretation: The model outputs probabilities, allowing us to estimate the likelihood of Obama winning in each state.
-3. Flexibility with Predictors: Logistic regression can handle a mix of numerical predictors (e.g., `Income`, `Dem.Rep`) and their potential interactions.
+3. Flexibility with Predictors: Logistic regression can handle a mix of numerical predictors (for example, Income, Dem.Rep) and their potential interactions.
 4. Diagnostic Tools: Logistic regression provides tools to assess model fit, assumptions, and variable importance, ensuring robust and interpretable results.
 
 This methodological approach is comprehensive yet efficient, ensuring that our findings are both statistically valid and practically relevant for understanding the factors influencing the 2008 election outcomes.
 
 # Dataset Overview
 1. Description of the Dataset:
-The **Election08** dataset provides state-by-state information related to the 2008 U.S. presidential election. It includes seven variables, capturing key socioeconomic, educational, and political characteristics of each state alongside the election outcome. These variables enable an in-depth analysis of the factors contributing to Barack Obama's or John McCain's victories in individual states.
+The Election08 dataset provides state-by-state information related to the 2008 U.S. presidential election. It includes seven variables, capturing key socioeconomic, educational, and political characteristics of each state alongside the election outcome. These variables enable an in-depth analysis of the factors contributing to Barack Obama's or John McCain's victories in individual states.
 
 2. Data Variable Dictionary:
 - State: Name of the state.
@@ -68,19 +69,26 @@ The **Election08** dataset provides state-by-state information related to the 20
 - HS: Percentage of adults with at least a high school education.
 - BA: Percentage of adults with at least a college education.
 - Dem.Rep: Difference in percent Democrat and percent Republican (based on a 2008 Gallup survey).
-- ObamaWin: 
-  - `1`: Obama (Democrat) won the state in 2008.
-  - `0`: McCain (Republican) won the state in 2008.
+- ObamaWin:
+  - 1: Obama (Democrat) won the state in 2008.
+  - 0: McCain (Republican) won the state in 2008.
 
 # Dataframe Details
 1. Observations: 51 (50 states plus the District of Columbia).
 2. Variables: 7 (6 predictors and 1 dependent variable).
+   - Independent Variables:
+     - Income
+     - HS
+     - BA
+     - Dem.Rep
+   - Dependent Variable:
+     - ObamaWin
 
 # Data Sources:
 1. Income Data: U.S. Census Bureau, Table 659. Personal Income Per Capita (2007).
 2. High School Education Data: U.S. Census Bureau, 1990 Census of Population, [NCES Digest (http://nces.ed.gov/programs/digest/d08/tables/dt08_011.asp).
 3. College Education Data: U.S. Census Bureau, Table 225. Educational Attainment by State (2007).
-4. Political Leaning Data: Gallup, [State of the States: Political Party Affiliation](http://www.gallup.com/poll/114016/state-states-political-party-affiliation.aspx#1).
+4. Political Leaning Data: Gallup, [State of the States: Political Party Affiliation] (http://www.gallup.com/poll/114016/state-states-political-party-affiliation.aspx#1).
 
 # Data Collection Procedure
 The dataset was compiled by merging information from the sources listed above, ensuring consistency in definitions and measurements across variables. Each variable was carefully checked to match its description in the dataset's metadata, and all data represent the state-level characteristics leading up to the 2008 election. This comprehensive and systematic approach ensures the dataset is suitable for logistic regression analysis, allowing for robust predictions of the 2008 U.S. presidential election results.
@@ -105,6 +113,8 @@ create_boxplot(Election08, "BA", "ObamaWin", "Bachelor's Degree (%) vs ObamaWin"
 create_boxplot(Election08, "Dem.Rep", "ObamaWin", "Democrat-Republican Difference vs ObamaWin", "Dem.Rep (%)")
 ```
 
+Based on the first three boxplots regarding average income and educatuion levels, we can see that among the states that Obama won, people in these states tend to have a higher average income and education level. Based on the boxplot of democratic representation, there are also more people supporting the democratic party in the states that Obama won.
+
 # Statistical Analysis
 
 # Check Conditions
@@ -119,7 +129,7 @@ emplogitplot1(ObamaWin ~ Dem.Rep, data = Election08, ngroups = 5)
 
 Thus, the linearity condition was assessed using empirical logit plots, which confirmed an approximately linear relationship between the predictors (Income, HS, BA, Dem.Rep) and the log odds of the election outcome (ObamaWin). This supports the validity of the logistic regression model.
 
-# Correlation matrix & Variance Inflation Factor (VIF)
+# Correlation Matrix & Variance Inflation Factor (VIF)
 ```{r}
 cor_matrix <- cor(Election08[, c("Income", "HS", "BA", "Dem.Rep")])
 print(cor_matrix)
@@ -132,10 +142,10 @@ The correlation matrix revealed a strong positive correlation between Income and
 # Simple Logistic Regression Model Construction
 ```{r}
 models <- list(
-  Income = glm(ObamaWin ~ Income, data = Election08, family = "binomial"),
-  HS = glm(ObamaWin ~ HS, data = Election08, family = "binomial"),
-  BA = glm(ObamaWin ~ BA, data = Election08, family = "binomial"),
-  DemRep = glm(ObamaWin ~ Dem.Rep, data = Election08, family = "binomial")
+  Income = glm(formula = ObamaWin ~ Income, data = Election08, family = "binomial"),
+  HS = glm(formula = ObamaWin ~ HS, data = Election08, family = "binomial"),
+  BA = glm(formula = ObamaWin ~ BA, data = Election08, family = "binomial"),
+  DemRep = glm(formula = ObamaWin ~ Dem.Rep, data = Election08, family = "binomial")
 )
 ```
 # Summary of the Simple Logistic Regression Models
@@ -145,7 +155,7 @@ lapply(models, summary)
 
 # Multiple Logistic Regression Model Construction
 ```{r}
-final_model <- glm(ObamaWin ~ Income + HS + BA + Dem.Rep, data = Election08, family = "binomial")
+final_model <- glm(formula = ObamaWin ~ Income + HS + BA + Dem.Rep, data = Election08, family = "binomial")
 ```
 
 # Summary of the Multiple Logistic Regression Models
@@ -188,33 +198,33 @@ print(p_value_g_test)
 
 # Results & Interpretation
 1. Simple Logistic Regression Models:
-   - Each predictor (`Income`, `HS`, `BA`, and `Dem.Rep`) was independently analyzed for its relationship with the likelihood of Barack Obama winning a state.
-   - Among these, `Dem.Rep` had the strongest and most statistically significant effect, with a coefficient of **0.3508** (\(p < 0.001\)). This indicates that for every 1% increase in the Democrat-Republican margin, the log-odds of Obama winning the state increase by 0.3508.
-   - `Income` and `BA` were also significant predictors (\(p < 0.01\)), with higher income and higher college education rates associated with an increased likelihood of Obama winning.
-   - `HS` was marginally significant (\(p \approx 0.05\)), showing a weaker effect compared to other predictors.
+   - Each predictor (Income, HS, BA, and Dem.Rep) was independently analyzed for its relationship with the likelihood of Barack Obama winning a state.
+   - Among these, Dem.Rep had the strongest and most statistically significant effect, with a coefficient of 0.3508 (p < 0.001). This indicates that for every 1% increase in the Democrat-Republican margin, the log-odds of Obama winning the state increase by 0.3508.
+   - Income and BA were also significant predictors (p < 0.01), with higher income and higher college education rates associated with an increased likelihood of Obama winning.
+   - HS was marginally significant, showing a weaker effect compared to other predictors.
 
 2. Multiple Logistic Regression Model:
-   - When combining all predictors (`Income`, `HS`, `BA`, and `Dem.Rep`) into a single model, only `Dem.Rep` remained significant (\(p = 0.0198\)).
-   - This result suggests that `Dem.Rep` is the most influential factor when controlling for the other variables.
+   - When combining all predictors (Income, HS, BA, and Dem.Rep) into a single model, only Dem.Rep remained significant (p = 0.0198).
+   - This result suggests that Dem.Rep is the most influential factor when controlling for the other variables.
    - The combined model had a much lower residual deviance (9.7252) and AIC (19.725), indicating better overall fit compared to individual models.
 
 3. Model Comparison:
    - The multiple logistic regression model performed better than the simple models.
-   - The G-test confirmed that the combined model explains significantly more variability in the election outcomes compared to the null model (\(p < 0.001\)).
+   - The G-test confirmed that the combined model explains significantly more variability in the election outcomes compared to the null model (p < 0.001).
 
-# Interpretation:
-1. The analysis confirms that political leaning (`Dem.Rep`) is the strongest predictor of the 2008 presidential election results. This aligns with the hypothesis that states with a higher Democrat-Republican margin were more likely to vote for Barack Obama。
-2. While socioeconomic factors (`Income`, `HS`, and `BA`) are individually significant in some cases, their effects diminish when combined with `Dem.Rep`, likely due to overlapping explanatory power.
+# Interpretation
+1. The analysis confirms that political leaning (Dem.Rep) is the strongest predictor of the 2008 presidential election results. This aligns with the hypothesis that states with a higher Democrat-Republican margin were more likely to vote for Barack Obama。
+2. While socioeconomic factors (Income, HS, and BA) are individually significant in some cases, their effects diminish when combined with Dem.Rep, likely due to overlapping explanatory power.
 3. The multiple logistic regression model outperforms the simple models by capturing the joint effects of all predictors, making it the most effective approach for predicting state-level election outcomes.
 
-# Key Findings:
-1. `Dem.Rep` explains the majority of the variation in the election outcomes.
+# Key Findings
+1. Dem.Rep explains the majority of the variation in the election outcomes.
 2. The multiple logistic regression model provides the best predictive performance due to its ability to account for interactions and combined effects of predictors.
 
 # Suggestions for Future Research
 1. Inclusion of Additional Variables: Future studies could incorporate other influential factors such as voter turnout rates, urban versus rural demographics, or historical voting patterns to gain a more comprehensive understanding of election outcomes.
-2. Temporal Expansion: Analyzing data from other presidential elections could help validate whether `Dem.Rep` remains the most influential predictor across different election years.
-3. Regional Analysis: Conducting regional studies (e.g., Midwest vs. South) could provide insights into whether the influence of political leaning varies geographically.
+2. Temporal Expansion: Analyzing data from other presidential elections could help validate whether Dem.Rep remains the most influential predictor across different election years.
+3. Regional Analysis: Conducting regional studies (for example, Midwest vs. South) could provide insights into whether the influence of political leaning varies geographically.
 4. Interaction Effects: Future research could explore interactions between predictors, such as how income levels might moderate the effect of education on election outcomes.
 
 # Limitations
@@ -224,9 +234,9 @@ print(p_value_g_test)
 4. Binary Outcome: The analysis simplifies the election outcome to a binary variable, ignoring nuances such as the margin of victory.
 
 # Implications
-1. Political Strategy: The strong influence of `Dem.Rep` highlights the importance of targeted campaigning in states with close Democrat-Republican margins. Understanding political leanings at the state level can guide resource allocation and strategy.
+1. Political Strategy: The strong influence of Dem.Rep highlights the importance of targeted campaigning in states with close Democrat-Republican margins. Understanding political leanings at the state level can guide resource allocation and strategy.
 2. Policy Prioritization: Socioeconomic factors like income and education, while secondary, still contribute to election outcomes. Policymakers may consider how addressing these issues aligns with voter preferences.
 3. Model Application: The multiple logistic regression model's effectiveness suggests its utility for other binary prediction tasks, such as forecasting election results or voter turnout based on demographic factors.
 
 # Conclusion
-This study identifies `Dem.Rep`, the difference between the percentage of Democrats and Republicans in a state, as the most influential factor in predicting the 2008 U.S. presidential election outcome. While socioeconomic variables such as income and education levels play a role, their effects are secondary to political leaning. Moreover, the multiple logistic regression model proves to be the most effective for predicting election outcomes, as it accounts for the combined influence of all predictors. These findings underscore the importance of political alignment and multivariable approaches in understanding electoral behavior, providing valuable insights for future analyses and campaign strategies.
+This study identifies Dem.Rep, the difference between the percentage of Democrats and Republicans in a state, as the most influential factor in predicting the 2008 U.S. presidential election outcome. While socioeconomic variables such as income and education levels play a role, their effects are secondary to political leaning. Moreover, the multiple logistic regression model proves to be the most effective for predicting election outcomes, as it accounts for the combined influence of all predictors. These findings underscore the importance of political alignment and multivariable approaches in understanding electoral behavior, providing valuable insights for future analyses and campaign strategies.
