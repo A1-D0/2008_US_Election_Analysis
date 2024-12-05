@@ -234,6 +234,29 @@ print(p_value_g_test)
 ```
 
 # Results & Interpretation
+1. Simple Logistic Regression Models:
+   - Each predictor (`Income`, `HS`, `BA`, and `Dem.Rep`) was independently analyzed for its relationship with the likelihood of Barack Obama winning a state.
+   - Among these, `Dem.Rep` had the strongest and most statistically significant effect, with a coefficient of **0.3508** (\(p < 0.001\)). This indicates that for every 1% increase in the Democrat-Republican margin, the log-odds of Obama winning the state increase by 0.3508.
+   - `Income` and `BA` were also significant predictors (\(p < 0.01\)), with higher income and higher college education rates associated with an increased likelihood of Obama winning.
+   - `HS` was marginally significant (\(p \approx 0.05\)), showing a weaker effect compared to other predictors.
+
+2. Multiple Logistic Regression Model:
+   - When combining all predictors (`Income`, `HS`, `BA`, and `Dem.Rep`) into a single model, only `Dem.Rep` remained significant (\(p = 0.0198\)).
+   - This result suggests that `Dem.Rep` is the most influential factor when controlling for the other variables.
+   - The combined model had a much lower residual deviance (9.7252) and AIC (19.725), indicating better overall fit compared to individual models.
+
+3. Model Comparison:
+   - The multiple logistic regression model performed better than the simple models.
+   - The G-test confirmed that the combined model explains significantly more variability in the election outcomes compared to the null model (\(p < 0.001\)).
+
+# Interpretation:
+1. The analysis confirms that political leaning (`Dem.Rep`) is the strongest predictor of the 2008 presidential election results. This aligns with the hypothesis that states with a higher Democrat-Republican margin were more likely to vote for Barack Obama。
+2. While socioeconomic factors (`Income`, `HS`, and `BA`) are individually significant in some cases, their effects diminish when combined with `Dem.Rep`, likely due to overlapping explanatory power.
+3. The multiple logistic regression model outperforms the simple models by capturing the joint effects of all predictors, making it the most effective approach for predicting state-level election outcomes.
+
+# Key Findings:
+1. `Dem.Rep` explains the majority of the variation in the election outcomes.
+2. The multiple logistic regression model provides the best predictive performance due to its ability to account for interactions and combined effects of predictors.
 
 # Suggestions for Future Research
 1. Inclusion of Additional Variables: Future studies could incorporate other influential factors such as voter turnout rates, urban versus rural demographics, or historical voting patterns to gain a more comprehensive understanding of election outcomes.
