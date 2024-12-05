@@ -248,6 +248,7 @@ compare_metrics <- function(model, data, response) {
 ```
 ##G-tests
 
+```{r}
 ##G-test for HS
 G <- 69.737 - 65.741
 df <- 1
@@ -271,6 +272,9 @@ G <- 69.737 - 9.7252
 df <- 4
 p_value_g_test <- pchisq(G, df, lower.tail = FALSE)
 print(p_value_g_test)
+
+```
+
 
 # Results
 
