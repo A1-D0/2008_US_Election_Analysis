@@ -31,8 +31,7 @@ This study examines state-level factors predicting whether Barack Obama or John 
 The goal of our study is to use logistic regression to determine which state-level socioeconomic and political factors most effectively predict the 2008 U.S. election results based on the Election08 dataset. This analysis helps us understand the relationships among predictors such as income, education levels, and political leanings.
 
 # Research Question
-Among political leaning, education level, and income, what is the most influential factor in predicting the presidential election result in 2008?
-Is the multiple regression model more effective in predicting the election result than the single regression models?
+Among political leaning, education level, and income, what is the most influential factor in predicting the presidential election result in 2008? Is the multiple logistic regression model more effective in predicting the election result than the simple logistic regression model?
 
 # Expected Findings
 Note the target population.
@@ -150,10 +149,7 @@ empirical_logit_tidy <- function(data, predictor, response) {
     ) %>%
     filter(!is.infinite(EmpiricalLogit)) # Remove bins with infinite logits
 }
-```
 
-
-```{r}
 # Plot empirical logit vs predictor
 
 
@@ -167,11 +163,6 @@ empirical_logit_tidy <- function(data, predictor, response) {
 #        y = "Empirical Logit") +
 #   theme_minimal()
 
-```
-
-
-
-```{r}
 # Generate empirical logit plots for each predictor
 empirical_logit_tidy(Election08, "Income", "ObamaWin")
 empirical_logit_tidy(Election08, "HS", "ObamaWin")
