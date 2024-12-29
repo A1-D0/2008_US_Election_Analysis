@@ -244,7 +244,7 @@ print(conf_intervals)
      - Since the interval does not include 0, Dem.Rep is statistically significant, and its positive effect highlights it as the most influential factor in the model.
 
 # Key Findings
-1. The analysis confirms that political leaning (Dem.Rep) is the strongest predictor of the 2008 presidential election results. This aligns with the hypothesis that states with a higher Democrat-Republican margin were more likely to vote for Barack Obama。
+1. The analysis confirms that political leaning (Dem.Rep) is the strongest predictor of the 2008 presidential election results. This aligns with the hypothesis that states with a higher Democrat-Republican margin were more likely to vote for Barack Obama.
 2. While socioeconomic factors (Income, HS, and BA) are individually significant in some cases, their effects diminish when combined with Dem.Rep, likely due to overlapping explanatory power.
 3. The multiple logistic regression model outperforms the simple models by capturing the joint effects of all predictors, making it the most effective approach for predicting state-level election outcomes.
 
