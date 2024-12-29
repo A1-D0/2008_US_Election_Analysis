@@ -1,13 +1,13 @@
 ---
 title: Exploration of the Influential Factor of the Presidential Election Results in 2008 Using
   Logistic Regression Models
-author: "Daisy, Mike, and Osvaldo"
+author: "Mike Liu, Osvaldo Hernandez-Segura, and Daisy Yu"
 date: "2024-12-05"
 output:
   pdf_document:
     latex_engine: xelatex
 ---
-```{r, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+```{r message=FALSE, warning=FALSE, results='hide'}
 library(Stat2Data)
 library(ggplot2)
 library(dplyr)
@@ -41,19 +41,26 @@ This study provides a structured approach to understanding how state-level chara
 The primary goal of this project is to predict state-level election outcomes for the 2008 U.S. presidential election. The dependent variable, ObamaWin, is categorical (1 = Obama won, 0 = McCain won), making logistic regression the most appropriate modeling technique. Logistic regression is specifically designed to model binary outcomes by estimating the probability of success (in this case, Obama winning a state) as a function of predictor variables.
 
 The following modeling process is used to achieve this objective:
+
 1. Simple Logistic Regression:
    - To explore the relationship between each predictor (Income, HS, BA, Dem.Rep) and the dependent variable independently.
    - This step allows us to identify which variables are individually significant predictors of the election outcome.
+
 2. Multiple Logistic Regression:
    - To account for the interaction and combined effect of all predictors on the election outcome.
    - This model provides a more comprehensive understanding of how socioeconomic and political factors collectively influence voting patterns.
+
 3. Model Comparison:
-   - We evaluate the models using performance metrics such as G-tests and AIC. This helps determine which model best explains the variability in the election outcomes.
+   - We evaluate the models using tools such as confidence intervals, G-tests and AIC values. This helps determine which model best explains the variability in the election outcomes.
 
 Why Choose Logistic Regression?
+
 1. Suitability for Binary Outcomes: Logistic regression is tailored explicitly for binary response variables like ObamaWin.
+
 2. Probabilistic Interpretation: The model outputs probabilities, allowing us to estimate the likelihood of Obama winning in each state.
+
 3. Flexibility with Predictors: Logistic regression can handle a mix of numerical predictors (for example, Income, Dem.Rep) and their potential interactions.
+
 4. Diagnostic Tools: Logistic regression provides tools to assess model fit, assumptions, and variable importance, ensuring robust and interpretable results.
 
 This methodological approach is comprehensive yet efficient, ensuring that our findings are both statistically valid and practically relevant for understanding the factors influencing the 2008 election outcomes.
@@ -75,14 +82,14 @@ The Election08 dataset provides state-by-state information related to the 2008 U
 
 # Dataframe Details
 1. Observations: 51 (50 states plus the District of Columbia).
-2. Variables: 7 (6 predictors and 1 dependent variable).
+2. Variables: 7 (4 independent variables and 1 dependent variable).
    - Independent Variables:
-     - Income
-     - HS
-     - BA
-     - Dem.Rep
+     - Income: Numerical continuous variable
+     - HS: Numerical continuous variable
+     - BA: Numerical continuous variable
+     - Dem.Rep: Numerical continuous variable
    - Dependent Variable:
-     - ObamaWin
+     - ObamaWin: Categorical binary variable
 
 # Data Sources:
 1. Income Data: U.S. Census Bureau, Table 659. Personal Income Per Capita (2007).
@@ -118,7 +125,7 @@ Based on the first three boxplots regarding average income and educatuion levels
 # Statistical Analysis
 
 # Check Conditions
-The conditions for logistic regressions are linearity, randomness, and independence. The linearity condition means that a linear relationship between the log(odds) and the predictor should exist. Also, we assume that the process of data collection is random and that each observation is independent.
+The conditions for logistic regressions are linearity, randomness, and independence. The linearity condition means that a linear relationship between the log(odds) and the predictor should exist. Also, we assume that the process of data collection is random and that each observation is independent, following a Bernoulli process.
 
 ```{r}
 emplogitplot1(ObamaWin ~ Income, data = Election08, ngroups = 5)
@@ -141,31 +148,183 @@ The correlation matrix revealed a strong positive correlation between Income and
 
 # Simple Logistic Regression Model Construction
 ```{r}
-models <- list(
-  Income = glm(formula = ObamaWin ~ Income, data = Election08, family = "binomial"),
-  HS = glm(formula = ObamaWin ~ HS, data = Election08, family = "binomial"),
-  BA = glm(formula = ObamaWin ~ BA, data = Election08, family = "binomial"),
-  DemRep = glm(formula = ObamaWin ~ Dem.Rep, data = Election08, family = "binomial")
-)
+model_Income <- glm(formula = ObamaWin ~ Income, data = Election08, family = "binomial")
+model_HS <- glm(formula = ObamaWin ~ HS, data = Election08, family = "binomial")
+model_BA <- glm(formula = ObamaWin ~ BA, data = Election08, family = "binomial")
+model_DemRep <- glm(formula = ObamaWin ~ Dem.Rep, data = Election08, family = "binomial")
+```
+
+# Graphic Representation of the Simple Models
+
+```{r message=FALSE, warning=FALSE}
+Election08$PredictedProb_Income <- predict(model_Income, type = "response")
+Election08$PredictedProb_HS <- predict(model_HS, type = "response")
+Election08$PredictedProb_BA <- predict(model_BA, type = "response")
+Election08$PredictedProb_DemRep <- predict(model_DemRep, type = "response")
+
+ggplot(Election08, aes(x = Income, y = PredictedProb_Income)) +
+  geom_point() +
+  
+  geom_smooth(method = "glm", method.args = list(family = "binomial"), se = FALSE) +
+  
+  # geom_smooth(method = "loess", se = FALSE, color = "blue") +
+  labs(
+    title = "Predicted Probability of Obama Winning vs. Income",
+    x = "Income (Per Capita)",
+    y = "Predicted Probability of Obama Winning"
+  ) +
+  theme_minimal()
+
+ggplot(Election08, aes(x = HS, y = PredictedProb_HS)) +
+  geom_point() +
+  
+  geom_smooth(method = "glm", method.args = list(family = "binomial"), se = FALSE) +
+  
+  # geom_smooth(method = "loess", se = FALSE, color = "blue") +
+  labs(
+    title = "Predicted Probability of Obama Winning vs. HS",
+    x = "High School Education (%)",
+    y = "Predicted Probability of Obama Winning"
+  ) +
+  theme_minimal()
+
+ggplot(Election08, aes(x = BA, y = PredictedProb_BA)) +
+  geom_point() +
+  
+  geom_smooth(method = "glm", method.args = list(family = "binomial"), se = FALSE) +
+  # geom_smooth(method = "loess", se = FALSE, color = "blue") +
+  labs(
+    title = "Predicted Probability of Obama Winning vs. BA",
+    x = "Bachelor's Degree (%)",
+    y = "Predicted Probability of Obama Winning"
+  ) +
+  theme_minimal()
+
+ggplot(Election08, aes(x = Dem.Rep, y = PredictedProb_DemRep)) +
+  geom_point() +
+  geom_smooth(method = "glm", method.args = list(family = "binomial"), se = FALSE) +
+  # geom_smooth(method = "loess", se = FALSE, color = "blue") +
+  labs(
+    title = "Predicted Probability of Obama Winning vs. Dem.Rep",
+    x = "Democrat-Republican Margin (%)",
+    y = "Predicted Probability of Obama Winning"
+  ) +
+  theme_minimal()
 ```
 
 # Summary of the Simple Logistic Regression Models
 ```{r}
-lapply(models, summary)
+summary_Income <- summary(model_Income)
+summary_HS <- summary(model_HS)
+summary_BA <- summary(model_BA)
+summary_DemRep <- summary(model_DemRep)
+
+print(summary_Income)
+print(summary_HS)
+print(summary_BA)
+print(summary_DemRep)
 ```
 
 Based on the summary of the simple logistic models, the AIC values are identified as follows:
-1. AIC : 52.867
+
+1. AIC for ObamaWin ~ Income: 52.867
+
+2. AIC for ObamaWin ~ HS: 69.741
+
+3. AIC for ObamaWin ~ BA: 53.689
+
+4. AIC for ObamaWin ~ Dem.Rep: 31.167
+
+Therefore, among the independent variables, Dem.Rep (political leaning) is the strongest predictor of election outcomes, as evidenced by its substantially lower AIC value (31.167) compared to the other models. On the other hand, socioeconomic variables (Income, HS, and BA) are weaker predictors, with HS being the least effective (AIC = 69.741).
 
 # Multiple Logistic Regression Model Construction
 ```{r message=FALSE, warning=FALSE}
 final_model <- glm(formula = ObamaWin ~ Income + HS + BA + Dem.Rep, data = Election08, family = "binomial")
 ```
 
+# Graphic Representation of the Final Model
+
+```{r message=FALSE, warning=FALSE}
+Election08$PredictedProb <- predict(final_model, type = "response")
+
+ggplot(Election08, aes(x = Income, y = PredictedProb)) +
+  geom_point() +
+  geom_smooth(method = "glm", method.args = list(family = "binomial"), se = FALSE) +
+  # geom_smooth(method = "loess", se = FALSE, color = "blue") +
+  labs(
+    title = "Predicted Probability of Obama Winning vs. Income",
+    x = "Income (Per Capita)",
+    y = "Predicted Probability of Obama Winning"
+  ) +
+  theme_minimal()
+
+ggplot(Election08, aes(x = HS, y = PredictedProb)) +
+  geom_point() +
+  geom_smooth(method = "glm", method.args = list(family = "binomial"), se = FALSE) +
+  # geom_smooth(method = "loess", se = FALSE, color = "blue") +
+  labs(
+    title = "Predicted Probability of Obama Winning vs. HS",
+    x = "High School Education (%)",
+    y = "Predicted Probability of Obama Winning"
+  ) +
+  theme_minimal()
+
+ggplot(Election08, aes(x = BA, y = PredictedProb)) +
+  geom_point() +
+  geom_smooth(method = "glm", method.args = list(family = "binomial"), se = FALSE) +
+  # geom_smooth(method = "loess", se = FALSE, color = "blue") +
+  labs(
+    title = "Predicted Probability of Obama Winning vs. BA",
+    x = "Bachelor's Degree (%)",
+    y = "Predicted Probability of Obama Winning"
+  ) +
+  theme_minimal()
+
+ggplot(Election08, aes(x = Dem.Rep, y = PredictedProb)) +
+  geom_point() +
+  geom_smooth(method = "glm", method.args = list(family = "binomial"), se = FALSE) +
+  # geom_smooth(method = "loess", se = FALSE, color = "blue") +
+  labs(
+    title = "Predicted Probability of Obama Winning vs. Dem.Rep",
+    x = "Democrat-Republican Margin (%)",
+    y = "Predicted Probability of Obama Winning"
+  ) +
+  theme_minimal()
+```
+
 # Summary of the Multiple Logistic Regression Models
 ```{r}
 summary(final_model)
 ```
+
+# Interpretation of the Estimated Coefficients from the Final Model
+
+The final multiple logistic regression model includes the predictors Income, HS, BA, and Dem.Rep to predict whether Barack Obama won the 2008 U.S. presidential election.
+
+1. Intercept:
+   - Estimate: -53.61
+   - Interpretation: When all predictor variables (Income, HS, BA, and Dem.Rep) are zero, the log-odds of Obama winning a state are -53.61. However, this value has no practical meaning because all predictors being zero is unrealistic in this context.
+   - Significance: With a p-value of 0.1554, the intercept is not statistically significant.
+
+2. Income (Per Capita Income):
+   - Estimate: 0.000645
+   - Interpretation: For every $1 increase in per capita income, the log-odds of Obama winning increase by 0.000645, holding all other predictors constant. This suggests a very small positive effect of income on the likelihood of Obama winning.
+   - Significance: With a p-value of 0.1819, the effect of income is not statistically significant.
+
+3. HS (Percentage of Adults with at Least a High School Education):
+   - Estimate: 0.1514
+   - Interpretation: For every 1% increase in the percentage of adults with at least a high school education, the log-odds of Obama winning increase by 0.1514, holding all other predictors constant. This indicates a weak positive relationship between high school education rates and the likelihood of Obama winning.
+   - Significance: With a p-value of 0.6973, this predictor is not statistically significant.
+
+4. BA (Percentage of Adults with at Least a Bachelor's Degree):
+   - Estimate: 0.5214
+   - Interpretation: For every 1% increase in the percentage of adults with at least a bachelor’s degree, the log-odds of Obama winning increase by 0.5214, holding all other predictors constant. This indicates a moderate positive effect of college education on the likelihood of Obama winning.
+   - Significance: With a p-value of 0.1865, this effect is not statistically significant.
+
+5. Dem.Rep (Difference in Percent Democrat and Percent Republican):
+   - Estimate: 0.6353
+   - Interpretation: For every 1% increase in the Democrat-Republican margin, the log-odds of Obama winning increase by 0.6353, holding all other predictors constant. This demonstrates a strong positive relationship between political leaning and the likelihood of Obama winning.
+   - Significance: With a p-value of 0.0198, this predictor is statistically significant at the 5% level, making it the most important variable in the model.
 
 # Model Comparison by G-tests
 ```{r}
@@ -199,6 +358,37 @@ df <- 4
 p_value_g_test <- pchisq(G, df, lower.tail = FALSE)
 print(p_value_g_test)
 ```
+
+# Interpretation of G-Test Results
+1. G-Test for Income:
+- Test Statistic (G):  G = 69.737 - 48.867 = 20.87 
+- Degrees of Freedom (df): 1
+- p-value:  4.92*10^-6
+- Interpretation: The small p-value indicates that adding Income to the null model significantly improves the model's fit. This suggests that Income is a meaningful predictor of election outcomes when considered on its own.
+
+2. G-Test for HS (High School Education):
+- Test Statistic (G):  G = 69.737 - 65.741 = 3.996 
+- Degrees of Freedom (df): 1
+- p-value:  0.0456
+- Interpretation: The p-value indicates that HS marginally improves the model's fit over the null model. However, its effect is weaker compared to other predictors, and its impact may not be substantial in the presence of other variables.
+
+3. G-Test for BA (Bachelor's Education):
+- Test Statistic (G):  G = 69.737 - 49.689 = 20.048 
+- Degrees of Freedom (df): 1
+- p-value:  7.55*10^-6
+- Interpretation: The small p-value suggests that BA significantly improves the model's fit over the null model, indicating it is a meaningful predictor of election outcomes when considered individually.
+
+4. G-Test for Dem.Rep (Democrat-Republican Margin):
+- Test Statistic (G):  G = 69.737 - 27.167 = 42.57 
+- Degrees of Freedom (df): 1
+- p-value:  6.82*10^-11
+- Interpretation: The extremely small p-value indicates that Dem.Rep significantly improves the model's fit over the null model. This confirms that political leaning is the strongest individual predictor of the election outcomes in 2008.
+
+5. G-Test for Final Model:
+- Test Statistic (G):  G = 69.737 - 9.7252 = 60.01 
+- Degrees of Freedom (df): 4
+- p-value:  2.37*10^-12
+- Interpretation: The final model, which includes Income, HS, BA, and Dem.Rep, significantly improves the fit compared to the null model. The small p-value shows that the combination of all predictors collectively explains the variability in the election outcomes much better than the null model.
 
 # Statistical Inference
 ```{r message=FALSE, warning=FALSE}
@@ -244,7 +434,7 @@ print(conf_intervals)
      - Since the interval does not include 0, Dem.Rep is statistically significant, and its positive effect highlights it as the most influential factor in the model.
 
 # Key Findings
-1. The analysis confirms that political leaning (Dem.Rep) is the strongest predictor of the 2008 presidential election results. This aligns with the hypothesis that states with a higher Democrat-Republican margin were more likely to vote for Barack Obama.
+1. The analysis confirms that political leaning (Dem.Rep) is the strongest predictor of the 2008 presidential election results. This aligns with the hypothesis that states with a higher Democrat-Republican margin were more likely to vote for Barack Obama。
 2. While socioeconomic factors (Income, HS, and BA) are individually significant in some cases, their effects diminish when combined with Dem.Rep, likely due to overlapping explanatory power.
 3. The multiple logistic regression model outperforms the simple models by capturing the joint effects of all predictors, making it the most effective approach for predicting state-level election outcomes.
 
@@ -258,16 +448,16 @@ print(conf_intervals)
 3. Regional Analysis: Conducting regional studies (for example, Midwest vs. South) could provide insights into whether the influence of political leaning varies geographically.
 4. Interaction Effects: Future research could explore interactions between predictors, such as how income levels might moderate the effect of education on election outcomes.
 
+# Implications
+1. Political Strategy: The strong influence of Dem.Rep highlights the importance of targeted campaigning in states with close Democrat-Republican margins. Understanding political leanings at the state level can guide resource allocation and strategy.
+2. Policy Prioritization: Socioeconomic factors like income and education, while secondary, still contribute to election outcomes. Policymakers may consider how addressing these issues aligns with voter preferences.
+3. Model Application: The multiple logistic regression model's effectiveness suggests its utility for other binary prediction tasks, such as forecasting election results or voter turnout based on demographic factors.
+
 # Limitations
 1. Restricted Dataset: The analysis is based on a single election year (2008), limiting the generalizability of findings to other elections.
 2. Simplistic Model Assumptions: The logistic regression models assume linear relationships between predictors and the log odds of winning, which may oversimplify complex voter behaviors.
 3. Data Availability: Some variables, like detailed demographic breakdowns, were unavailable and could provide a richer analysis.
 4. Binary Outcome: The analysis simplifies the election outcome to a binary variable, ignoring nuances such as the margin of victory.
-
-# Implications
-1. Political Strategy: The strong influence of Dem.Rep highlights the importance of targeted campaigning in states with close Democrat-Republican margins. Understanding political leanings at the state level can guide resource allocation and strategy.
-2. Policy Prioritization: Socioeconomic factors like income and education, while secondary, still contribute to election outcomes. Policymakers may consider how addressing these issues aligns with voter preferences.
-3. Model Application: The multiple logistic regression model's effectiveness suggests its utility for other binary prediction tasks, such as forecasting election results or voter turnout based on demographic factors.
 
 # Conclusion
 This study identifies Dem.Rep, the difference between the percentage of Democrats and Republicans in a state, as the most influential factor in predicting the 2008 U.S. presidential election outcome. While socioeconomic variables such as income and education levels play a role, their effects are secondary to political leaning. Moreover, the multiple logistic regression model proves to be the most effective for predicting election outcomes, as it accounts for the combined influence of all predictors. These findings underscore the importance of political alignment and multivariable approaches in understanding electoral behavior, providing valuable insights for future analyses and campaign strategies.
